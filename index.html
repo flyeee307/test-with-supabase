@@ -748,6 +748,15 @@
             </div>
           </div>
         </div>
+        <div class="card" style="margin-top: 20px;">
+          <div class="card-title">
+            <div class="card-icon icon-navy">💬</div>戰役留言板
+          </div>
+          
+          <div id="notesList" style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="color: var(--text-muted); font-size: 13px;">通訊電話蟲正在連線讀取中...</div>
+          </div>
+        </div>
 
         <!-- FOOTER -->
         <div class="site-footer">
@@ -793,17 +802,43 @@
 
         // 寫一個非同步函數來抓取剛剛建的 notes 資料
         async function fetchNotes() {
-            // 使用新的 supabaseClient 來呼叫資料庫
-            const { data, error } = await supabaseClient
-                .from('notes')
-                .select('*');
-
-            if (error) {
-                console.error('抓取失敗:', error);
-            } else {
-                console.log('成功抓到資料啦！', data);
-                alert("資料庫連線成功！總共抓到 " + data.length + " 筆資料。");
-            }
+          // 1. 抓取資料庫內容（順便加上 .order 讓最新的留言排在最上面）
+          const { data, error } = await supabaseClient
+            .from('notes')
+            .select('*')
+            .order('id', { ascending: false });
+        
+          // 2. 找到我們剛剛在 HTML 挖好的那個空位
+          const listContainer = document.getElementById('notesList');
+        
+          // 3. 處理錯誤情況
+          if (error) {
+            console.error('抓取失敗:', error);
+            listContainer.innerHTML = '<div style="color: var(--crimson);">電話蟲連線中斷，讀取失敗！</div>';
+            return; // 發生錯誤就立刻停止執行
+          } 
+        
+          // 4. 清空原本「連線中...」的文字
+          listContainer.innerHTML = '';
+        
+          // 5. 如果資料庫目前是空的
+          if (data.length === 0) {
+            listContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">目前還沒有任何戰役筆記，搶先留下第一筆吧！</div>';
+            return;
+          }
+        
+          // 6. 最關鍵的魔法：用迴圈 (forEach) 把每一筆資料變成 HTML
+          data.forEach(function(note) {
+            // 設計每一筆留言長什麼樣子（這裡延續了你的灰底排版風格）
+            const noteHtml = `
+              <div style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px;">
+                <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">${note.content}</div>
+              </div>
+            `;
+            
+            // 把這段做好的 HTML，不斷附加 (+=) 到我們的空位裡面
+            listContainer.innerHTML += noteHtml;
+          });
         }
       // 【新增資料】的函數
       async function addNote() {
