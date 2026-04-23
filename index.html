@@ -768,31 +768,7 @@
         }</script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script>// 把剛剛在 Supabase 取得的 URL 和 Key 貼到這裡面（引號要保留）
-        const supabaseUrl = 'https://uigqffrqozojfeylokds.supabase.co';
-        const supabaseKey = 'sb_publishable_ikM1AnAxDLWGA9GMQdt-VA_iXm28Us4';
-
-        // 建立連線
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-        // 寫一個非同步函數來抓取剛剛建的 notes 資料
-        async function fetchNotes() {
-            const { data, error } = await supabaseClient
-                .from('notes')
-                .select('*');
-
-            if (error) {
-                console.error('抓取失敗:', error);
-            } else {
-                console.log('成功抓到資料啦！', data);
-                // 你可以在這裡用 JS 把 data 顯示在你的網頁畫面上
-                alert("資料庫連線成功！總共抓到 " + data.length + " 筆資料。");
-            }
-        }
-
-        // 執行函數
-        fetchNotes();
-    </script>
+    
     <script>// 把剛剛在 Supabase 取得的 URL 和 Key 貼到這裡面（引號要保留）
         // ⚠️ 請記得把下面這兩行換成你真實的專案網址與金鑰喔！
         const supabaseUrl = 'https://uigqffrqozojfeylokds.supabase.co';
