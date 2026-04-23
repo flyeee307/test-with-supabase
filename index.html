@@ -404,397 +404,420 @@
 </style>
 </head>
 <body>
-<div class="page-wrap">
+    <div class="page-wrap">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-badge">航海王 · 經典篇章</div>
-    <h1>馬林福特<br><span>頂上戰爭</span></h1>
-    <p class="hero-subtitle">Marineford · Summit War</p>
-    <p class="hero-desc">大海賊時代規模最大的戰役。白鬍子海賊團、43個盟友海賊團，對決十萬海軍。一場悲壯的救援，一個改變世界的結局。</p>
-    <div class="hero-stats">
-      <div class="stat-cell">
-        <span class="stat-num">10萬</span>
-        <div class="stat-label">海軍動員兵力</div>
-      </div>
-      <div class="stat-cell">
-        <span class="stat-num">43</span>
-        <div class="stat-label">白鬍子同盟海賊團</div>
-      </div>
-      <div class="stat-cell">
-        <span class="stat-num">1</span>
-        <div class="stat-label">四皇隕落</div>
-      </div>
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-badge">航海王 · 經典篇章</div>
+            <h1>馬林福特<br><span>頂上戰爭</span></h1>
+            <p class="hero-subtitle">Marineford · Summit War</p>
+            <p class="hero-desc">大海賊時代規模最大的戰役。白鬍子海賊團、43個盟友海賊團，對決十萬海軍。一場悲壯的救援，一個改變世界的結局。</p>
+            <div class="hero-stats">
+                <div class="stat-cell">
+                    <span class="stat-num">10萬</span>
+                    <div class="stat-label">海軍動員兵力</div>
+                </div>
+                <div class="stat-cell">
+                    <span class="stat-num">43</span>
+                    <div class="stat-label">白鬍子同盟海賊團</div>
+                </div>
+                <div class="stat-cell">
+                    <span class="stat-num">1</span>
+                    <div class="stat-label">四皇隕落</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB NAV -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="showTab('timeline', this)">戰役時間線</button>
+            <button class="tab-btn" onclick="showTab('characters', this)">關鍵人物</button>
+            <button class="tab-btn" onclick="showTab('analysis', this)">專案分析</button>
+            <button class="tab-btn" onclick="showTab('insights', this)">深層啟發</button>
+        </div>
+
+        <!-- ══ PANEL: TIMELINE ══ -->
+        <div class="panel active" id="panel-timeline">
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-gold">⚓</div>戰役起因
+                </div>
+                <div class="timeline">
+                    <div class="tl-item">
+                        <div class="tl-dot dot-gray"></div>
+                        <div class="tl-label">背景</div>
+                        <div class="tl-text">黑鬍子馬歇爾·D·汀奇出賣白鬍子二番隊隊長<strong>「火拳」艾斯</strong>，艾斯被海軍捕獲，押送至海軍本部馬林福特，宣判公開處決。</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot dot-gray"></div>
+                        <div class="tl-label">震驚揭秘</div>
+                        <div class="tl-text">元帥戰國在處刑前公布：艾斯是傳奇海賊王<strong>哥爾·D·羅傑</strong>之子，此舉更激化了這場戰役的政治意義。</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot dot-gold"></div>
+                        <div class="tl-label">白鬍子出征</div>
+                        <div class="tl-text"><strong>世界最強男人</strong>愛德華·紐蓋特率領白鬍子海賊團與旗下43個盟友海賊團，正面衝擊海軍本部，展開史上最大規模的海上戰役。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-red">⚔</div>戰役經過
+                </div>
+                <div class="timeline">
+                    <div class="tl-item">
+                        <div class="tl-dot dot-gold"></div>
+                        <div class="tl-label">魯夫奇跡登場</div>
+                        <div class="tl-text">草帽魯夫帶領推進城逃犯從天而降，以驚人意志突破海軍防線，與白鬍子聯手作戰，成功<strong>解救艾斯</strong>。</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot dot-red"></div>
+                        <div class="tl-label">命運的轉折</div>
+                        <div class="tl-text">撤退途中，艾斯無法忍受赤犬對白鬍子的侮辱，<strong>挺身回頭迎戰</strong>。赤犬以岩漿之拳貫穿艾斯胸膛，艾斯在魯夫懷中含笑而逝。</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot dot-red"></div>
+                        <div class="tl-label">白鬍子殞落</div>
+                        <div class="tl-text">白鬍子以最後的力量掩護所有船員撤退，身中無數刀傷槍傷，仍以<strong>站立的姿態死去</strong>，不倒的傳說從此成為永恆。</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot dot-gray"></div>
+                        <div class="tl-label">黑鬍子攪局</div>
+                        <div class="tl-text">黑鬍子趁亂現身，以神秘手段奪取白鬍子的<strong>震震果實</strong>能力，成為史上唯一雙果實能力者，宣告新時代開始。</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot dot-gold"></div>
+                        <div class="tl-label">紅髮收場</div>
+                        <div class="tl-text">四皇<strong>香克斯</strong>率紅髮海賊團現身，以一句「我來承擔這場戰爭的代價」讓各方同意停戰，戰役就此落幕。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-gold">★</div>白鬍子最後的宣言
+                </div>
+                <div class="oda-box">
+                    <div class="oda-quote">「ONE PIECE 是真實存在的！」</div>
+                    <div class="oda-source">白鬍子 · 愛德華·紐蓋特 · 臨終遺言</div>
+                </div>
+                <p class="note-text">這句話在他死後引爆了新一輪大海賊時代，也讓頂上戰爭從一場海賊與海軍的衝突，昇華為整個世界格局的分水嶺。</p>
+            </div>
+
+        </div>
+
+        <!-- ══ PANEL: CHARACTERS ══ -->
+        <div class="panel" id="panel-characters">
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-gold">人</div>關鍵人物 · 點擊卡片展開詳情
+                </div>
+                <div class="char-grid">
+                    <div class="char-card" onclick="selectChar('ace', this)">
+                        <div class="char-avatar" style="background:#FDEAEA;color:#8B1A1A;">艾</div>
+                        <div class="char-name">「火拳」艾斯</div>
+                        <div class="char-role">白鬍子海賊團 · 二番隊長</div>
+                    </div>
+                    <div class="char-card" onclick="selectChar('wb', this)">
+                        <div class="char-avatar" style="background:#F5EDD6;color:#8B6914;">白</div>
+                        <div class="char-name">白鬍子</div>
+                        <div class="char-role">四皇 · 世界最強男人</div>
+                    </div>
+                    <div class="char-card" onclick="selectChar('luffy', this)">
+                        <div class="char-avatar" style="background:#E6F4EA;color:#2D6A4F;">魯</div>
+                        <div class="char-name">草帽魯夫</div>
+                        <div class="char-role">草帽海賊團 · 船長</div>
+                    </div>
+                    <div class="char-card" onclick="selectChar('akainu', this)">
+                        <div class="char-avatar" style="background:#F0E0E0;color:#6B0000;">赤</div>
+                        <div class="char-name">赤犬（薩卡斯基）</div>
+                        <div class="char-role">海軍本部 · 大將</div>
+                    </div>
+                </div>
+
+                <div class="char-detail" id="char-ace">
+                    <div class="char-detail-name">波特卡斯·D·艾斯</div>
+                    <div class="char-detail-meta">惡魔果實：炎炎果實 · 懸賞金：5億5千萬貝里 · 羅傑之子</div>
+                    <div>白鬍子的義子，在挑戰白鬍子的過程中被其折服，加入海賊團擔任二番隊長。他的死成為這場戰役最關鍵的轉折——既是整個拯救計畫最終失敗的根源，也是魯夫最沉重的傷痛與成長的起點。</div>
+                    <div class="char-quote">「我的一生沒有後悔……白鬍子船長，你們……謝謝你們愛我。」</div>
+                </div>
+
+                <div class="char-detail" id="char-wb">
+                    <div class="char-detail-name">愛德華·紐蓋特（白鬍子）</div>
+                    <div class="char-detail-meta">惡魔果實：震震果實 · 四皇 · 懸賞金：已撤銷</div>
+                    <div>曾與羅傑齊名，被公認最接近大秘寶的男人。明知勝算極低仍選擇出戰，是義氣凌駕理性計算的決定。他選擇以生命換取所有部下的撤退，以站立姿態死去，成為不朽傳說。</div>
+                    <div class="char-quote">「我的船員們……不叫做部下……他們是我的孩子！」</div>
+                </div>
+
+                <div class="char-detail" id="char-luffy">
+                    <div class="char-detail-name">蒙其·D·魯夫</div>
+                    <div class="char-detail-meta">惡魔果實：橡皮果實 · 懸賞金：當時3億貝里</div>
+                    <div>這場戰役是魯夫第一次面對真正的無力感。他以驚人意志突破重重阻礙，卻仍無法阻止艾斯的死亡。這份傷痛讓他精神崩潰，卻也催生了兩年後更強大、更成熟的草帽船長。</div>
+                    <div class="char-quote">「我不想要任何東西……只想讓兄弟活著……」</div>
+                </div>
+
+                <div class="char-detail" id="char-akainu">
+                    <div class="char-detail-name">薩卡斯基（赤犬）</div>
+                    <div class="char-detail-meta">惡魔果實：岩漿果實 · 頂上戰爭後升任海軍元帥</div>
+                    <div>奉行「徹底的正義」，親手殺死艾斯，重傷魯夫。他的行動雖讓海軍達成目的，卻讓世界對「正義」的本質產生了深刻質疑，成為魯夫日後最強烈的仇恨對象。</div>
+                    <div class="char-quote">「正義不勝利的話，就無法稱為正義！」</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══ PANEL: ANALYSIS ══ -->
+        <div class="panel" id="panel-analysis">
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-red">✗</div>這是失敗的專案嗎？
+                </div>
+                <div class="analysis-grid">
+                    <div class="analysis-item">
+                        <div class="analysis-label">目標達成率</div>
+                        <div class="analysis-value">0%</div>
+                        <div class="analysis-desc">救出艾斯 — 最終失敗</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">主要損失</div>
+                        <div class="analysis-value">慘烈</div>
+                        <div class="analysis-desc">艾斯、白鬍子陣亡，魯夫重傷</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">傳統專案評分</div>
+                        <div class="analysis-value">失敗</div>
+                        <div class="analysis-desc">KPI未達成，代價極高</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">長期影響評分</div>
+                        <div class="analysis-value">深遠</div>
+                        <div class="analysis-desc">改變世界格局的分水嶺</div>
+                    </div>
+                </div>
+                <div class="verdict-box">
+                    <div class="verdict-title">最終裁決</div>
+                    <div class="verdict-text">這是一個目標失敗、但意義深遠的專案。它的「價值」不在於KPI達成率，而在於對每個人、對整個世界所留下的不可抹滅的印記。</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-navy">⊡</div>利害關係人 · 各自的「成功」定義
+                </div>
+                <table class="stake-table">
+                    <thead>
+                        <tr>
+                            <th>角色</th>
+                            <th>目標</th>
+                            <th>結果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>魯夫</strong></td>
+                            <td>救出艾斯</td>
+                            <td><span class="result-badge badge-fail">失敗</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>白鬍子</strong></td>
+                            <td>保護船員、讓魯夫生還</td>
+                            <td><span class="result-badge badge-part">部分達成</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>艾斯</strong></td>
+                            <td>不拖累夥伴</td>
+                            <td><span class="result-badge badge-part">以死完成</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>海軍</strong></td>
+                            <td>公開處決、震懾海賊</td>
+                            <td><span class="result-badge badge-win">表面成功</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>黑鬍子</strong></td>
+                            <td>奪取白鬍子能力</td>
+                            <td><span class="result-badge badge-win">漁翁得利</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-gold">◎</div>尾田榮一郎的看法
+                </div>
+                <div class="oda-box">
+                    <div class="oda-quote">「對我來說，頂上戰爭編就只是個魯夫在旅途上會遭遇的一個事件，我從沒想過它會這麼受歡迎。」</div>
+                    <div class="oda-source">尾田榮一郎 · 公開採訪</div>
+                </div>
+                <p class="note-text">作者眼中只是「途中事件」，讀者卻視之為整部作品的巔峰——這種落差，恰恰說明了這段故事的情感穿透力已遠超創作者的預期。</p>
+                <div class="divider"></div>
+                <div class="oda-box">
+                    <div class="oda-quote">「最終章的故事相當令人驚奇，與它相比頂上戰爭編顯得平平無奇。」</div>
+                    <div class="oda-source">尾田榮一郎 · 採訪（2024）</div>
+                </div>
+                <p class="note-text" style="margin-top:0;">他以最終章來比較頂上戰爭，這既是對最終章的期許，也間接承認了頂上戰爭在整體故事中的特殊地位。</p>
+            </div>
+
+        </div>
+
+        <!-- ══ PANEL: INSIGHTS ══ -->
+        <div class="panel" id="panel-insights">
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-green">◈</div>這段故事給我們的啟發
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+
+                    <div class="insight-item">
+                        <div class="insight-num">01</div>
+                        <div>
+                            <div class="insight-title">愛與義氣的極限</div>
+                            <div class="insight-text">白鬍子與艾斯用生命詮釋了「羈絆」的重量。有些事情，不是為了贏，而是因為不能不做。白鬍子明知勝算極低，仍率領所有孩子出征，展現了超越理性計算的義氣本質。</div>
+                        </div>
+                    </div>
+
+                    <div class="insight-item">
+                        <div class="insight-num">02</div>
+                        <div>
+                            <div class="insight-title">無力感是成長的起點</div>
+                            <div class="insight-text">魯夫的崩潰，是他成為真正王者的轉捩點。沒有這次失敗，就沒有兩年後脫胎換骨的草帽船長。這段故事告訴我們：真正的強大，是為了不再失去。</div>
+                        </div>
+                    </div>
+
+                    <div class="insight-item">
+                        <div class="insight-num">03</div>
+                        <div>
+                            <div class="insight-title">失敗的蝴蝶效應</div>
+                            <div class="insight-text">短期看是慘敗，但白鬍子遺言引爆新大海賊時代，海軍「正義」形象崩解，黑鬍子崛起，四皇勢力重組。一場「敗仗」在系統層次上產生了比「勝利」更深遠的影響。</div>
+                        </div>
+                    </div>
+
+                    <div class="insight-item">
+                        <div class="insight-num">04</div>
+                        <div>
+                            <div class="insight-title">悲劇的力量</div>
+                            <div class="insight-text">有些戰役，輸了也是永恆。這段故事被普遍視為航海王的巔峰，不是因為英雄勝利，而是因為它展現了人性在極限下最光輝的一面。悲壯的結局反而讓故事更有力量。</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-icon icon-navy">↺</div>系統思考 · 長期影響
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
+                    <div class="analysis-item">
+                        <div class="analysis-label">世界格局</div>
+                        <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">四皇勢力重組，黑鬍子填補白鬍子位置，新大海賊時代正式開啟。</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">海軍形象</div>
+                        <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">赤犬「徹底的正義」讓世界開始質疑海軍正義的本質，引發道德爭論。</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">魯夫的成長</div>
+                        <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">兩年苦修催生更強大的草帽魯夫，最終征服新世界，成就海賊王之夢。</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">故事意義</div>
+                        <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">普遍被海迷認為是《航海王》的情感巔峰，超越任何一場勝利的震撼。</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="site-footer">
+            <p><strong>馬林福特頂上戰爭</strong> · 航海王（One Piece）</p>
+            <p>© 尾田榮一郎 · 集英社 · 東映動畫</p>
+            <p style="margin-top:8px;font-size:11px;">本頁面為非商業學習用途的劇情分析整理</p>
+        </div>
+
     </div>
-  </div>
 
-  <!-- TAB NAV -->
-  <div class="tab-nav">
-    <button class="tab-btn active" onclick="showTab('timeline', this)">戰役時間線</button>
-    <button class="tab-btn" onclick="showTab('characters', this)">關鍵人物</button>
-    <button class="tab-btn" onclick="showTab('analysis', this)">專案分析</button>
-    <button class="tab-btn" onclick="showTab('insights', this)">深層啟發</button>
-  </div>
+    <script>function showTab(name, btn) {
+            document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+            document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+            document.getElementById('panel-' + name).classList.add('active');
+            btn.classList.add('active');
+        }
 
-  <!-- ══ PANEL: TIMELINE ══ -->
-  <div class="panel active" id="panel-timeline">
+        var selectedCharBtn = null;
 
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-gold">⚓</div>戰役起因
-      </div>
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-dot dot-gray"></div>
-          <div class="tl-label">背景</div>
-          <div class="tl-text">黑鬍子馬歇爾·D·汀奇出賣白鬍子二番隊隊長<strong>「火拳」艾斯</strong>，艾斯被海軍捕獲，押送至海軍本部馬林福特，宣判公開處決。</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot dot-gray"></div>
-          <div class="tl-label">震驚揭秘</div>
-          <div class="tl-text">元帥戰國在處刑前公布：艾斯是傳奇海賊王<strong>哥爾·D·羅傑</strong>之子，此舉更激化了這場戰役的政治意義。</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot dot-gold"></div>
-          <div class="tl-label">白鬍子出征</div>
-          <div class="tl-text"><strong>世界最強男人</strong>愛德華·紐蓋特率領白鬍子海賊團與旗下43個盟友海賊團，正面衝擊海軍本部，展開史上最大規模的海上戰役。</div>
-        </div>
-      </div>
-    </div>
+        function selectChar(id, card) {
+            document.querySelectorAll('.char-card').forEach(function (c) { c.classList.remove('selected'); });
+            document.querySelectorAll('.char-detail').forEach(function (d) { d.classList.remove('show'); });
 
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-red">⚔</div>戰役經過
-      </div>
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-dot dot-gold"></div>
-          <div class="tl-label">魯夫奇跡登場</div>
-          <div class="tl-text">草帽魯夫帶領推進城逃犯從天而降，以驚人意志突破海軍防線，與白鬍子聯手作戰，成功<strong>解救艾斯</strong>。</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot dot-red"></div>
-          <div class="tl-label">命運的轉折</div>
-          <div class="tl-text">撤退途中，艾斯無法忍受赤犬對白鬍子的侮辱，<strong>挺身回頭迎戰</strong>。赤犬以岩漿之拳貫穿艾斯胸膛，艾斯在魯夫懷中含笑而逝。</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot dot-red"></div>
-          <div class="tl-label">白鬍子殞落</div>
-          <div class="tl-text">白鬍子以最後的力量掩護所有船員撤退，身中無數刀傷槍傷，仍以<strong>站立的姿態死去</strong>，不倒的傳說從此成為永恆。</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot dot-gray"></div>
-          <div class="tl-label">黑鬍子攪局</div>
-          <div class="tl-text">黑鬍子趁亂現身，以神秘手段奪取白鬍子的<strong>震震果實</strong>能力，成為史上唯一雙果實能力者，宣告新時代開始。</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot dot-gold"></div>
-          <div class="tl-label">紅髮收場</div>
-          <div class="tl-text">四皇<strong>香克斯</strong>率紅髮海賊團現身，以一句「我來承擔這場戰爭的代價」讓各方同意停戰，戰役就此落幕。</div>
-        </div>
-      </div>
-    </div>
+            if (selectedCharBtn === card) {
+                selectedCharBtn = null;
+                return;
+            }
+            card.classList.add('selected');
+            var det = document.getElementById('char-' + id);
+            if (det) det.classList.add('show');
+            selectedCharBtn = card;
+        }</script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-gold">★</div>白鬍子最後的宣言
-      </div>
-      <div class="oda-box">
-        <div class="oda-quote">「ONE PIECE 是真實存在的！」</div>
-        <div class="oda-source">白鬍子 · 愛德華·紐蓋特 · 臨終遺言</div>
-      </div>
-      <p class="note-text">這句話在他死後引爆了新一輪大海賊時代，也讓頂上戰爭從一場海賊與海軍的衝突，昇華為整個世界格局的分水嶺。</p>
-    </div>
+    <script>// 把剛剛在 Supabase 取得的 URL 和 Key 貼到這裡面（引號要保留）
+        const supabaseUrl = 'https://uigqffrqozojfeylokds.supabase.co';
+        const supabaseKey = 'sb_publishable_ikM1AnAxDLWGA9GMQdt-VA_iXm28Us4';
 
-  </div>
+        // 建立連線
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  <!-- ══ PANEL: CHARACTERS ══ -->
-  <div class="panel" id="panel-characters">
+        // 寫一個非同步函數來抓取剛剛建的 notes 資料
+        async function fetchNotes() {
+            const { data, error } = await supabaseClient
+                .from('notes')
+                .select('*');
 
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-gold">人</div>關鍵人物 · 點擊卡片展開詳情
-      </div>
-      <div class="char-grid">
-        <div class="char-card" onclick="selectChar('ace', this)">
-          <div class="char-avatar" style="background:#FDEAEA;color:#8B1A1A;">艾</div>
-          <div class="char-name">「火拳」艾斯</div>
-          <div class="char-role">白鬍子海賊團 · 二番隊長</div>
-        </div>
-        <div class="char-card" onclick="selectChar('wb', this)">
-          <div class="char-avatar" style="background:#F5EDD6;color:#8B6914;">白</div>
-          <div class="char-name">白鬍子</div>
-          <div class="char-role">四皇 · 世界最強男人</div>
-        </div>
-        <div class="char-card" onclick="selectChar('luffy', this)">
-          <div class="char-avatar" style="background:#E6F4EA;color:#2D6A4F;">魯</div>
-          <div class="char-name">草帽魯夫</div>
-          <div class="char-role">草帽海賊團 · 船長</div>
-        </div>
-        <div class="char-card" onclick="selectChar('akainu', this)">
-          <div class="char-avatar" style="background:#F0E0E0;color:#6B0000;">赤</div>
-          <div class="char-name">赤犬（薩卡斯基）</div>
-          <div class="char-role">海軍本部 · 大將</div>
-        </div>
-      </div>
+            if (error) {
+                console.error('抓取失敗:', error);
+            } else {
+                console.log('成功抓到資料啦！', data);
+                // 你可以在這裡用 JS 把 data 顯示在你的網頁畫面上
+                alert("資料庫連線成功！總共抓到 " + data.length + " 筆資料。");
+            }
+        }
 
-      <div class="char-detail" id="char-ace">
-        <div class="char-detail-name">波特卡斯·D·艾斯</div>
-        <div class="char-detail-meta">惡魔果實：炎炎果實 · 懸賞金：5億5千萬貝里 · 羅傑之子</div>
-        <div>白鬍子的義子，在挑戰白鬍子的過程中被其折服，加入海賊團擔任二番隊長。他的死成為這場戰役最關鍵的轉折——既是整個拯救計畫最終失敗的根源，也是魯夫最沉重的傷痛與成長的起點。</div>
-        <div class="char-quote">「我的一生沒有後悔……白鬍子船長，你們……謝謝你們愛我。」</div>
-      </div>
+        // 執行函數
+        fetchNotes();
+    </script>
+    <script>// 把剛剛在 Supabase 取得的 URL 和 Key 貼到這裡面（引號要保留）
+        // ⚠️ 請記得把下面這兩行換成你真實的專案網址與金鑰喔！
+        const supabaseUrl = 'https://uigqffrqozojfeylokds.supabase.co';
+        const supabaseKey = 'sb_publishable_ikM1AnAxDLWGA9GMQdt-VA_iXm28Us4';
 
-      <div class="char-detail" id="char-wb">
-        <div class="char-detail-name">愛德華·紐蓋特（白鬍子）</div>
-        <div class="char-detail-meta">惡魔果實：震震果實 · 四皇 · 懸賞金：已撤銷</div>
-        <div>曾與羅傑齊名，被公認最接近大秘寶的男人。明知勝算極低仍選擇出戰，是義氣凌駕理性計算的決定。他選擇以生命換取所有部下的撤退，以站立姿態死去，成為不朽傳說。</div>
-        <div class="char-quote">「我的船員們……不叫做部下……他們是我的孩子！」</div>
-      </div>
+        // 建立連線：將常數名稱改為 supabaseClient，避免與 CDN 載入的 supabase 衝突
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-      <div class="char-detail" id="char-luffy">
-        <div class="char-detail-name">蒙其·D·魯夫</div>
-        <div class="char-detail-meta">惡魔果實：橡皮果實 · 懸賞金：當時3億貝里</div>
-        <div>這場戰役是魯夫第一次面對真正的無力感。他以驚人意志突破重重阻礙，卻仍無法阻止艾斯的死亡。這份傷痛讓他精神崩潰，卻也催生了兩年後更強大、更成熟的草帽船長。</div>
-        <div class="char-quote">「我不想要任何東西……只想讓兄弟活著……」</div>
-      </div>
+        // 寫一個非同步函數來抓取剛剛建的 notes 資料
+        async function fetchNotes() {
+            // 使用新的 supabaseClient 來呼叫資料庫
+            const { data, error } = await supabaseClient
+                .from('notes')
+                .select('*');
 
-      <div class="char-detail" id="char-akainu">
-        <div class="char-detail-name">薩卡斯基（赤犬）</div>
-        <div class="char-detail-meta">惡魔果實：岩漿果實 · 頂上戰爭後升任海軍元帥</div>
-        <div>奉行「徹底的正義」，親手殺死艾斯，重傷魯夫。他的行動雖讓海軍達成目的，卻讓世界對「正義」的本質產生了深刻質疑，成為魯夫日後最強烈的仇恨對象。</div>
-        <div class="char-quote">「正義不勝利的話，就無法稱為正義！」</div>
-      </div>
+            if (error) {
+                console.error('抓取失敗:', error);
+            } else {
+                console.log('成功抓到資料啦！', data);
+                alert("資料庫連線成功！總共抓到 " + data.length + " 筆資料。");
+            }
+        }
 
-    </div>
-  </div>
-
-  <!-- ══ PANEL: ANALYSIS ══ -->
-  <div class="panel" id="panel-analysis">
-
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-red">✗</div>這是失敗的專案嗎？
-      </div>
-      <div class="analysis-grid">
-        <div class="analysis-item">
-          <div class="analysis-label">目標達成率</div>
-          <div class="analysis-value">0%</div>
-          <div class="analysis-desc">救出艾斯 — 最終失敗</div>
-        </div>
-        <div class="analysis-item">
-          <div class="analysis-label">主要損失</div>
-          <div class="analysis-value">慘烈</div>
-          <div class="analysis-desc">艾斯、白鬍子陣亡，魯夫重傷</div>
-        </div>
-        <div class="analysis-item">
-          <div class="analysis-label">傳統專案評分</div>
-          <div class="analysis-value">失敗</div>
-          <div class="analysis-desc">KPI未達成，代價極高</div>
-        </div>
-        <div class="analysis-item">
-          <div class="analysis-label">長期影響評分</div>
-          <div class="analysis-value">深遠</div>
-          <div class="analysis-desc">改變世界格局的分水嶺</div>
-        </div>
-      </div>
-      <div class="verdict-box">
-        <div class="verdict-title">最終裁決</div>
-        <div class="verdict-text">這是一個目標失敗、但意義深遠的專案。它的「價值」不在於KPI達成率，而在於對每個人、對整個世界所留下的不可抹滅的印記。</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-navy">⊡</div>利害關係人 · 各自的「成功」定義
-      </div>
-      <table class="stake-table">
-        <thead>
-          <tr>
-            <th>角色</th>
-            <th>目標</th>
-            <th>結果</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>魯夫</strong></td>
-            <td>救出艾斯</td>
-            <td><span class="result-badge badge-fail">失敗</span></td>
-          </tr>
-          <tr>
-            <td><strong>白鬍子</strong></td>
-            <td>保護船員、讓魯夫生還</td>
-            <td><span class="result-badge badge-part">部分達成</span></td>
-          </tr>
-          <tr>
-            <td><strong>艾斯</strong></td>
-            <td>不拖累夥伴</td>
-            <td><span class="result-badge badge-part">以死完成</span></td>
-          </tr>
-          <tr>
-            <td><strong>海軍</strong></td>
-            <td>公開處決、震懾海賊</td>
-            <td><span class="result-badge badge-win">表面成功</span></td>
-          </tr>
-          <tr>
-            <td><strong>黑鬍子</strong></td>
-            <td>奪取白鬍子能力</td>
-            <td><span class="result-badge badge-win">漁翁得利</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-gold">◎</div>尾田榮一郎的看法
-      </div>
-      <div class="oda-box">
-        <div class="oda-quote">「對我來說，頂上戰爭編就只是個魯夫在旅途上會遭遇的一個事件，我從沒想過它會這麼受歡迎。」</div>
-        <div class="oda-source">尾田榮一郎 · 公開採訪</div>
-      </div>
-      <p class="note-text">作者眼中只是「途中事件」，讀者卻視之為整部作品的巔峰——這種落差，恰恰說明了這段故事的情感穿透力已遠超創作者的預期。</p>
-      <div class="divider"></div>
-      <div class="oda-box">
-        <div class="oda-quote">「最終章的故事相當令人驚奇，與它相比頂上戰爭編顯得平平無奇。」</div>
-        <div class="oda-source">尾田榮一郎 · 採訪（2024）</div>
-      </div>
-      <p class="note-text" style="margin-top:0;">他以最終章來比較頂上戰爭，這既是對最終章的期許，也間接承認了頂上戰爭在整體故事中的特殊地位。</p>
-    </div>
-
-  </div>
-
-  <!-- ══ PANEL: INSIGHTS ══ -->
-  <div class="panel" id="panel-insights">
-
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-green">◈</div>這段故事給我們的啟發
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-
-        <div class="insight-item">
-          <div class="insight-num">01</div>
-          <div>
-            <div class="insight-title">愛與義氣的極限</div>
-            <div class="insight-text">白鬍子與艾斯用生命詮釋了「羈絆」的重量。有些事情，不是為了贏，而是因為不能不做。白鬍子明知勝算極低，仍率領所有孩子出征，展現了超越理性計算的義氣本質。</div>
-          </div>
-        </div>
-
-        <div class="insight-item">
-          <div class="insight-num">02</div>
-          <div>
-            <div class="insight-title">無力感是成長的起點</div>
-            <div class="insight-text">魯夫的崩潰，是他成為真正王者的轉捩點。沒有這次失敗，就沒有兩年後脫胎換骨的草帽船長。這段故事告訴我們：真正的強大，是為了不再失去。</div>
-          </div>
-        </div>
-
-        <div class="insight-item">
-          <div class="insight-num">03</div>
-          <div>
-            <div class="insight-title">失敗的蝴蝶效應</div>
-            <div class="insight-text">短期看是慘敗，但白鬍子遺言引爆新大海賊時代，海軍「正義」形象崩解，黑鬍子崛起，四皇勢力重組。一場「敗仗」在系統層次上產生了比「勝利」更深遠的影響。</div>
-          </div>
-        </div>
-
-        <div class="insight-item">
-          <div class="insight-num">04</div>
-          <div>
-            <div class="insight-title">悲劇的力量</div>
-            <div class="insight-text">有些戰役，輸了也是永恆。這段故事被普遍視為航海王的巔峰，不是因為英雄勝利，而是因為它展現了人性在極限下最光輝的一面。悲壯的結局反而讓故事更有力量。</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <div class="card-icon icon-navy">↺</div>系統思考 · 長期影響
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
-        <div class="analysis-item">
-          <div class="analysis-label">世界格局</div>
-          <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">四皇勢力重組，黑鬍子填補白鬍子位置，新大海賊時代正式開啟。</div>
-        </div>
-        <div class="analysis-item">
-          <div class="analysis-label">海軍形象</div>
-          <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">赤犬「徹底的正義」讓世界開始質疑海軍正義的本質，引發道德爭論。</div>
-        </div>
-        <div class="analysis-item">
-          <div class="analysis-label">魯夫的成長</div>
-          <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">兩年苦修催生更強大的草帽魯夫，最終征服新世界，成就海賊王之夢。</div>
-        </div>
-        <div class="analysis-item">
-          <div class="analysis-label">故事意義</div>
-          <div style="font-size:13px;color:var(--text-primary);line-height:1.7;">普遍被海迷認為是《航海王》的情感巔峰，超越任何一場勝利的震撼。</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- FOOTER -->
-  <div class="site-footer">
-    <p><strong>馬林福特頂上戰爭</strong> · 航海王（One Piece）</p>
-    <p>© 尾田榮一郎 · 集英社 · 東映動畫</p>
-    <p style="margin-top:8px;font-size:11px;">本頁面為非商業學習用途的劇情分析整理</p>
-  </div>
-
-</div>
-
-<script>
-  function showTab(name, btn) {
-    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-    document.getElementById('panel-' + name).classList.add('active');
-    btn.classList.add('active');
-  }
-
-  var selectedCharBtn = null;
-
-  function selectChar(id, card) {
-    document.querySelectorAll('.char-card').forEach(function(c) { c.classList.remove('selected'); });
-    document.querySelectorAll('.char-detail').forEach(function(d) { d.classList.remove('show'); });
-
-    if (selectedCharBtn === card) {
-      selectedCharBtn = null;
-      return;
-    }
-    card.classList.add('selected');
-    var det = document.getElementById('char-' + id);
-    if (det) det.classList.add('show');
-    selectedCharBtn = card;
-  }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-  // 把剛剛在 Supabase 取得的 URL 和 Key 貼到這裡面（引號要保留）
-  const supabaseUrl = 'https://uigqffrqozojfeylokds.supabase.co';
-  const supabaseKey = 'sb_publishable_ikM1AnAxDLWGA9GMQdt-VA_iXm28Us4';
-  
-  // 建立連線
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-  // 寫一個非同步函數來抓取剛剛建的 notes 資料
-  async function fetchNotes() {
-    const { data, error } = await supabaseClient
-      .from('notes')
-      .select('*');
-    
-    if (error) {
-      console.error('抓取失敗:', error);
-    } else {
-      console.log('成功抓到資料啦！', data);
-      // 你可以在這裡用 JS 把 data 顯示在你的網頁畫面上
-      alert("資料庫連線成功！總共抓到 " + data.length + " 筆資料。");
-    }
-  }
-
-  // 執行函數
-  fetchNotes();
-</script>
+        // 執行函數
+        fetchNotes();
+    </script>
 </body>
 </html>
