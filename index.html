@@ -780,7 +780,7 @@
 
   // 寫一個非同步函數來抓取剛剛建的 notes 資料
   async function fetchNotes() {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('notes')
       .select('*');
     
