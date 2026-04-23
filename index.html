@@ -740,7 +740,7 @@
             <div style="display: flex; gap: 10px;">
               <input type="text" id="noteInput" placeholder="輸入你想紀錄的內容..." 
                      style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-              
+              <input type="file" id="imageInput" accept="image/*" style="padding: 10px;">
               <button onclick="addNote()" 
                       style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
                 送出紀錄
@@ -829,46 +829,85 @@
         
           // 6. 最關鍵的魔法：用迴圈 (forEach) 把每一筆資料變成 HTML
           data.forEach(function(note) {
-            // 設計每一筆留言長什麼樣子（這裡延續了你的灰底排版風格）
-            const noteHtml = `
-              <div style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px;">
-                <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">${note.content}</div>
-              </div>
-            `;
-            
-            // 把這段做好的 HTML，不斷附加 (+=) 到我們的空位裡面
-            listContainer.innerHTML += noteHtml;
-          });
+           
+           // 檢查這筆資料有沒有圖片網址，如果有，就產生一段 <img> 標籤
+           let imageHtml = '';
+           if (note.image_url) {
+             imageHtml = `<img src="${note.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
+           }
+       
+           // 把文字和圖片組合在一起
+           const noteHtml = `
+             <div style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px;">
+               <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">
+                 ${note.content}
+               </div>
+               ${imageHtml} </div>
+           `;
+           
+           listContainer.innerHTML += noteHtml;
+         });
         }
       // 【新增資料】的函數
-      async function addNote() {
-        // 1. 抓取使用者在輸入框打的字
-        const inputElement = document.getElementById('noteInput');
-        const textValue = inputElement.value;
-      
-        // 檢查如果沒打字就按送出，則跳出警告並停止執行
-        if (!textValue) {
-          alert("請先輸入內容喔！");
-          return;
+        async function addNote() {
+          const textInput = document.getElementById('noteInput');
+          const imageInput = document.getElementById('imageInput');
+          const textValue = textInput.value;
+          const imageFile = imageInput.files[0]; // 抓取使用者選擇的檔案
+        
+          if (!textValue && !imageFile) {
+            alert("請輸入文字或選擇一張圖片！");
+            return;
+          }
+        
+          let finalImageUrl = null; // 預設沒有圖片網址
+        
+          // === 步驟一：如果有選圖片，先上傳到 Storage ===
+          if (imageFile) {
+            // 幫圖片取一個獨一無二的名字 (用目前的時間戳記加上原本檔名，避免檔名重複被覆蓋)
+            const uniqueFileName = Date.now() + '_' + imageFile.name;
+        
+            // 上傳到剛剛建的 'images' 儲存桶
+            const { data: uploadData, error: uploadError } = await supabaseClient
+              .storage
+              .from('images')
+              .upload(uniqueFileName, imageFile);
+        
+            if (uploadError) {
+              console.error('圖片上傳失敗:', uploadError);
+              alert('圖片上傳失敗，請看控制台');
+              return; // 上傳失敗就中斷
+            }
+        
+            // 上傳成功後，取得這張圖片的公開網址
+            const { data: publicUrlData } = supabaseClient
+              .storage
+              .from('images')
+              .getPublicUrl(uniqueFileName);
+            
+            finalImageUrl = publicUrlData.publicUrl; // 把拿到的網址存起來
+          }
+        
+          // === 步驟二：將文字和圖片網址一起存進 Database ===
+          const { data, error } = await supabaseClient
+            .from('notes')
+            .insert([
+              { 
+                content: textValue, 
+                image_url: finalImageUrl // 把剛剛拿到的網址存進新開的欄位
+              }
+            ]);
+        
+          if (error) {
+            console.error('資料庫新增失敗:', error);
+            alert('資料庫新增失敗');
+          } else {
+            // 成功後的收尾工作
+            textInput.value = '';     // 清空文字框
+            imageInput.value = '';    // 清空檔案選擇器
+            fetchNotes();             // 重新讀取留言板畫面
+          }
         }
-      
-        // 2. 呼叫 Supabase 進行 Insert (新增)
-        const { data, error } = await supabaseClient
-          .from('notes') // 指定你的資料表名稱
-          .insert([
-            { content: textValue } // 要新增的欄位與內容
-          ]);
-      
-        // 3. 處理結果
-        if (error) {
-          console.error('新增失敗:', error);
-          alert('新增失敗了，請看控制台錯誤訊息');
-        } else {
-          alert('新增成功！');
-          inputElement.value = ''; // 清空輸入框
-          fetchNotes(); // 重新抓取一次資料，讓畫面更新（如果你有寫把資料顯示在畫面上的邏輯的話）
-        }
-       }
 
         // 執行函數
         fetchNotes();
