@@ -428,6 +428,12 @@
 </head>
 <body>
     <div class="page-wrap">
+        <div id="auth-section" style="margin-bottom: 20px;">
+          <button id="loginBtn" onclick="loginWithGoogle()" style="padding: 10px 20px; background: #4285F4; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            使用 Google 帳號登入
+          </button>
+          <span id="userStatus" style="margin-left: 10px; color: var(--text-primary);"></span>
+        </div>
         <div id="realtimeTicker" style="
             display: none; /* 預設隱藏，有資料才出現 */
             background: var(--crimson); 
@@ -445,7 +451,7 @@
             transition: opacity 1s ease;
         ">
             <div id="tickerContent" class="ticker-text" style="display: inline-block; padding-left: 100%;">
-                </div>
+            </div>
         </div>
       
         <!-- HERO -->
@@ -775,25 +781,29 @@
                 </div>
             </div>
             <div class="card" style="margin-top: 20px;">
-            <div class="card-title">
-              <div class="card-icon icon-gold">✎</div>新增戰役筆記
+              <div class="card-title">
+                <div class="card-icon icon-gold">✎</div>新增戰役筆記
+              </div>
+              <div id="auth-section" style="margin-bottom: 20px; padding: 10px; background: var(--smoke); border-radius: 8px;">
+                <button id="loginBtn" onclick="loginWithGoogle()" style="padding: 10px 20px; background: #4285F4; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                  ⚓ 使用 Google 帳號報到
+                </button>
+                <span id="userStatus" style="margin-left: 10px; color: var(--navy); font-weight: bold;"></span>
+              </div>
+              <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                <input type="text" id="nicknameInput" placeholder="你的陣營 / 暱稱..." 
+                       style="width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                
+                <input type="text" id="noteInput" placeholder="輸入你想紀錄的內容..." 
+                       style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                
+                <input type="file" id="imageInput" accept="image/*" style="padding: 10px;">
+                
+                <button onclick="addNote()" style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                  送出紀錄
+                </button>
+             </div>
             </div>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
-             
-             <input type="text" id="nicknameInput" placeholder="你的陣營 / 暱稱..." 
-                    style="width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-             
-             <input type="text" id="noteInput" placeholder="輸入你想紀錄的內容..." 
-                    style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-             
-             <input type="file" id="imageInput" accept="image/*" style="padding: 10px;">
-             
-             <button onclick="addNote()" style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
-               送出紀錄
-             </button>
-           </div>
-          </div>
 
           <div class="card" style="margin-top: 20px;">
             <div class="card-title">
@@ -851,6 +861,29 @@
         // 建立連線：將常數名稱改為 supabaseClient，避免與 CDN 載入的 supabase 衝突
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
+        // ==========================================
+        // 2. 【在這裡貼上】Google 登入的兩個函數
+        // ==========================================
+        async function loginWithGoogle() {
+          const { data, error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin }
+          });
+          if (error) console.error('登入失敗:', error.message);
+        }
+      
+        async function checkUser() {
+          const { data: { user } } = await supabaseClient.auth.getUser();
+          const userStatus = document.getElementById('userStatus');
+          const loginBtn = document.getElementById('loginBtn');
+      
+          if (user) {
+            // 抓取 Google 帳號的名字
+            userStatus.innerText = `歡迎歸隊，${user.user_metadata.full_name}！`;
+            loginBtn.style.display = 'none'; // 隱藏登入按鈕
+          }
+        }
+     
         // 寫一個非同步函數來抓取剛剛建的 notes 資料
         async function fetchNotes() {
           // 1. 抓取資料庫內容（順便加上 .order 讓最新的留言排在最上面）
@@ -1068,17 +1101,18 @@
         // === 步驟三：處理送出後的結果 ===
         if (error) {
           console.error('資料庫新增失敗:', error);
-          alert('資料庫新增失敗');
-        } else {
-          // 成功後清空所有輸入框，並重新讀取留言板
-          textInput.value = '';     
-          imageInput.value = '';    
-          nicknameInput.value = ''; 
-          fetchNotes();             
+            alert('資料庫新增失敗');
+          } else {
+            // 成功後清空所有輸入框，並重新讀取留言板
+            textInput.value = '';     
+            imageInput.value = '';    
+            nicknameInput.value = ''; 
+            fetchNotes();             
+          }
         }
-      }
 
         // 執行函數
+        checkUser();
         fetchNotes();
     </script>
 </body>
