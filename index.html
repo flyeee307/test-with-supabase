@@ -433,6 +433,9 @@
             使用 Google 帳號登入
           </button>
           <span id="userStatus" style="margin-left: 10px; color: var(--text-primary);"></span>
+          <button id="logoutBtn" onclick="logout()" style="display: none; padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
+            🚪 撤退 (登出)
+          </button>
         </div>
         <div id="realtimeTicker" style="
             display: none; /* 預設隱藏，有資料才出現 */
@@ -784,12 +787,6 @@
               <div class="card-title">
                 <div class="card-icon icon-gold">✎</div>新增戰役筆記
               </div>
-              <div id="auth-section" style="margin-bottom: 20px; padding: 10px; background: var(--smoke); border-radius: 8px;">
-                <button id="loginBtn" onclick="loginWithGoogle()" style="padding: 10px 20px; background: #4285F4; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                  ⚓ 使用 Google 帳號報到
-                </button>
-                <span id="userStatus" style="margin-left: 10px; color: var(--navy); font-weight: bold;"></span>
-              </div>
               <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
                 <input type="text" id="nicknameInput" placeholder="你的陣營 / 暱稱..." 
                        style="width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
@@ -862,7 +859,7 @@
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         // ==========================================
-        // 2. 【在這裡貼上】Google 登入的兩個函數
+        // 1. 【在這裡貼上】Google 登入的兩個函數
         // ==========================================
         async function loginWithGoogle() {
           const { data, error } = await supabaseClient.auth.signInWithOAuth({
@@ -871,16 +868,44 @@
           });
           if (error) console.error('登入失敗:', error.message);
         }
+
+        // ==========================================
+        // 2. 【新增】登出函數
+        // ==========================================
+        async function logout() {
+          // 呼叫 Supabase 的登出指令，清除瀏覽器裡的通行證 (Session)
+          const { error } = await supabaseClient.auth.signOut();
+          
+          if (error) {
+            console.error('登出失敗:', error.message);
+            alert('登出失敗，請重試！');
+          } else {
+            // 登出成功後，重新檢查一次身分（這會觸發下方的畫面重置機制）
+            checkUser(); 
+            alert("已成功登出！");
+          }
+        }
       
+        // ==========================================
+        // 3. 【修改】升級版的 checkUser 函數
+        // ==========================================
         async function checkUser() {
           const { data: { user } } = await supabaseClient.auth.getUser();
+          
           const userStatus = document.getElementById('userStatus');
           const loginBtn = document.getElementById('loginBtn');
-      
+          const logoutBtn = document.getElementById('logoutBtn'); // 抓取登出按鈕
+        
           if (user) {
-            // 抓取 Google 帳號的名字
+            // 【已登入狀態】：顯示名字、隱藏登入按鈕、顯示登出按鈕
             userStatus.innerText = `歡迎歸隊，${user.user_metadata.full_name}！`;
-            loginBtn.style.display = 'none'; // 隱藏登入按鈕
+            loginBtn.style.display = 'none'; 
+            logoutBtn.style.display = 'inline-block'; 
+          } else {
+            // 【未登入狀態】：清空名字、顯示登入按鈕、隱藏登出按鈕
+            userStatus.innerText = '';
+            loginBtn.style.display = 'inline-block'; 
+            logoutBtn.style.display = 'none'; 
           }
         }
      
