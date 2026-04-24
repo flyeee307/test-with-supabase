@@ -834,24 +834,27 @@
         
           // 6. 最關鍵的魔法：用迴圈 (forEach) 把每一筆資料變成 HTML
           data.forEach(function(note) {
-           
-           // 檢查這筆資料有沒有圖片網址，如果有，就產生一段 <img> 標籤
-           let imageHtml = '';
-           if (note.image_url) {
-             imageHtml = `<img src="${note.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
-           }
-       
-           // 把文字和圖片組合在一起
-           const noteHtml = `
-             <div style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px;">
-               <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">
-                 ${note.content}
-               </div>
-               ${imageHtml} </div>
-           `;
-           
-           listContainer.innerHTML += noteHtml;
-         });
+            
+            let imageHtml = '';
+            if (note.image_url) {
+              imageHtml = `<img src="${note.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
+            }
+        
+            // 【修改】在文字內容的上方，加上一行顯示 nickname 的 HTML，並套用航海王風格的金黃色
+            const noteHtml = `
+              <div style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px;">
+                <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
+                  ⚓ ${note.nickname || '無名海兵'}
+                </div>
+                <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">
+                  ${note.content}
+                </div>
+                ${imageHtml}
+              </div>
+            `;
+            
+            listContainer.innerHTML += noteHtml;
+          });
         }
       // 【新增資料】的函數
         async function addNote() {
