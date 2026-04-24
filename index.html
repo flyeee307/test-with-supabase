@@ -1148,13 +1148,15 @@
               content: textValue, 
               image_url: finalImageUrl,
               nickname: nicknameValue 
+              // user_id 會由後台自動帶入，不需要寫在這裡
             }
           ]);
       
-        // === 步驟三：處理送出後的結果 ===
-        if (error) {
-          console.error('資料庫新增失敗:', error);
-            alert('資料庫新增失敗');
+        // === 🛡️ 【關鍵修改】檢查是否有被 Trigger 擋下 ===
+          if (error) {
+            console.error('資料庫新增失敗:', error);
+            // 🛡️ 【關鍵修改】：讓 alert 顯示資料庫守衛 (Trigger) 傳來的專屬警告訊息
+            alert(error.message || '資料庫新增失敗，請稍後再試。'); 
           } else {
             // 成功後清空所有輸入框，並重新讀取留言板
             textInput.value = '';     
