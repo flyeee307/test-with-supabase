@@ -391,6 +391,11 @@
   }
   .panel.active { animation: fadeIn 0.2s ease; }
 
+   @keyframes tickerMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 520px) {
     .hero { padding: 40px 24px 36px; }
@@ -405,7 +410,24 @@
 </head>
 <body>
     <div class="page-wrap">
-
+        <div id="realtimeTicker" style="
+            display: none; /* 預設隱藏，有資料才出現 */
+            background: var(--crimson); 
+            color: white; 
+            padding: 8px 0; 
+            overflow: hidden; 
+            white-space: nowrap; 
+            font-size: 13px; 
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        ">
+            <div id="tickerContent" style="display: inline-block; padding-left: 100%; animation: tickerMove 15s linear infinite;">
+                </div>
+        </div>
+      
         <!-- HERO -->
         <div class="hero">
             <div class="hero-badge">航海王 · 經典篇章</div>
@@ -772,7 +794,8 @@
 
     </div>
 
-    <script>function showTab(name, btn) {
+    <script>
+     function showTab(name, btn) {
             document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
             document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
             document.getElementById('panel-' + name).classList.add('active');
@@ -793,7 +816,8 @@
             var det = document.getElementById('char-' + id);
             if (det) det.classList.add('show');
             selectedCharBtn = card;
-        }</script>
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     
@@ -856,6 +880,42 @@
             listContainer.innerHTML += noteHtml;
           });
         }
+
+
+     // 1. 初始化見聞色霸氣（訂閱 Realtime 頻道）
+      const channel = supabaseClient
+        .channel('battle-updates') // 頻道名稱可自訂
+        .on(
+          'postgres_changes', 
+          {
+            event: 'INSERT',     // 只監聽「新增」事件
+            schema: 'public',
+            table: 'notes'       // 指定監聽的資料表
+          },
+          (payload) => {
+            // 當事件發生時，payload 會包含新資料
+            console.log('偵測到新情報！', payload);
+            showTicker(payload.new.content); // 呼叫顯示跑馬燈的函數
+          }
+        )
+        .subscribe();
+      
+      // 2. 顯示跑馬燈的函數
+      function showTicker(newContent) {
+        const ticker = document.getElementById('realtimeTicker');
+        const content = document.getElementById('tickerContent');
+      
+        // 格式化顯示文字
+        content.innerText = `【最新情報傳遞中】有人傳送了新資訊：${newContent} ！！`;
+        
+        // 顯示跑馬燈
+        ticker.style.display = 'block';
+      
+        // 15 秒後自動隱藏（或是讓它一直跑直到下一則訊息）
+        setTimeout(() => {
+          ticker.style.display = 'none';
+        }, 15000);
+      }
       
       // 完整版新增留言函數（包含文字、圖片、暱稱）
       async function addNote() {
