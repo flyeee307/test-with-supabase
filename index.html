@@ -1044,17 +1044,27 @@
         }, 15000); // 重新開始倒數 15 秒
       }
       
-      // 完整版新增留言函數（包含文字、圖片、暱稱）
+      // 完整版新增留言函數（包含文字、圖片、暱稱，加入登入身分檢查）
       async function addNote() {
+      // === 【新增】第一關：檢查是否有登入的通行證 ===
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        
+        if (!user) {
+          alert("⛔ 海軍本部警告：請先使用 Google 帳號登入，才能發布戰報！");
+          return; // 煞車！強制停止後面的程式碼執行
+        }
+        // ===========================================
+      
         const textInput = document.getElementById('noteInput');
         const imageInput = document.getElementById('imageInput');
         const nicknameInput = document.getElementById('nicknameInput');
         
         const textValue = textInput.value;
         const imageFile = imageInput.files[0];
-        const nicknameValue = nicknameInput.value || '無名海兵'; 
       
-        // 檢查是否至少有輸入文字或選擇圖片
+        // 【優化小巧思】如果他沒填暱稱，我們就直接抓他 Google 帳號的名字當暱稱！
+        const nicknameValue = nicknameInput.value || user.user_metadata.full_name; 
+      
         if (!textValue && !imageFile) {
           alert("請輸入文字或選擇一張圖片！");
           return;
