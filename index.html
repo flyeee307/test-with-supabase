@@ -856,48 +856,73 @@
             listContainer.innerHTML += noteHtml;
           });
         }
-      // 【新增資料】的函數
-        async function addNote() {
-          const textInput = document.getElementById('noteInput');
-          const imageInput = document.getElementById('imageInput');
-          // 【新增】抓取暱稱輸入框
-          const nicknameInput = document.getElementById('nicknameInput');
-          
-          const textValue = textInput.value;
-          const imageFile = imageInput.files[0];
-          // 【新增】抓取使用者打的暱稱。如果他沒打字，我們就預設給他一個「無名海兵」的稱號！
-          const nicknameValue = nicknameInput.value || '無名海兵'; 
+      
+      // 完整版新增留言函數（包含文字、圖片、暱稱）
+      async function addNote() {
+        const textInput = document.getElementById('noteInput');
+        const imageInput = document.getElementById('imageInput');
+        const nicknameInput = document.getElementById('nicknameInput');
         
-          if (!textValue && !imageFile) {
-            alert("請輸入文字或選擇一張圖片！");
-            return;
-          }
-        
-          // ... (中間上傳圖片的程式碼保持不變) ...
-        
-          // === 儲存進 Database 的地方 ===
-          const { data, error } = await supabaseClient
-            .from('notes')
-            .insert([
-              { 
-                content: textValue, 
-                image_url: finalImageUrl,
-                // 【新增】把剛剛抓到的暱稱，存進你在第一步建立的 nickname 欄位裡
-                nickname: nicknameValue 
-              }
-            ]);
-        
-          if (error) {
-            console.error('資料庫新增失敗:', error);
-            alert('資料庫新增失敗');
-          } else {
-            textInput.value = '';     
-            imageInput.value = '';
-            // 【新增】送出後順便清空暱稱框
-            nicknameInput.value = '';    
-            fetchNotes();             
-          }
+        const textValue = textInput.value;
+        const imageFile = imageInput.files[0];
+        const nicknameValue = nicknameInput.value || '無名海兵'; 
+      
+        // 檢查是否至少有輸入文字或選擇圖片
+        if (!textValue && !imageFile) {
+          alert("請輸入文字或選擇一張圖片！");
+          return;
         }
+      
+        // 宣告一個變數來準備裝圖片網址（這就是剛剛報錯找不到的變數！）
+        let finalImageUrl = null; 
+      
+        // === 步驟一：如果有選圖片，先上傳到 Storage ===
+        if (imageFile) {
+          const uniqueFileName = Date.now() + '_' + imageFile.name;
+      
+          const { data: uploadData, error: uploadError } = await supabaseClient
+            .storage
+            .from('images')
+            .upload(uniqueFileName, imageFile);
+      
+          if (uploadError) {
+            console.error('圖片上傳失敗:', uploadError);
+            alert('圖片上傳失敗，請看控制台');
+            return; 
+          }
+      
+          const { data: publicUrlData } = supabaseClient
+            .storage
+            .from('images')
+            .getPublicUrl(uniqueFileName);
+          
+          // 將取得的網址裝進剛剛宣告的變數裡
+          finalImageUrl = publicUrlData.publicUrl; 
+        }
+      
+        // === 步驟二：將文字、圖片網址、暱稱一起存進 Database ===
+        const { data, error } = await supabaseClient
+          .from('notes')
+          .insert([
+            { 
+              content: textValue, 
+              image_url: finalImageUrl,
+              nickname: nicknameValue 
+            }
+          ]);
+      
+        // === 步驟三：處理送出後的結果 ===
+        if (error) {
+          console.error('資料庫新增失敗:', error);
+          alert('資料庫新增失敗');
+        } else {
+          // 成功後清空所有輸入框，並重新讀取留言板
+          textInput.value = '';     
+          imageInput.value = '';    
+          nicknameInput.value = ''; 
+          fetchNotes();             
+        }
+      }
 
         // 執行函數
         fetchNotes();
