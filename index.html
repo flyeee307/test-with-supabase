@@ -406,16 +406,22 @@
     .analysis-grid { grid-template-columns: 1fr 1fr; }
     .page-wrap { padding: 20px 14px 48px; }
   }
-  /* --- 跑馬燈動畫設定 --- */
-  /* 1. 預設給桌機的速度（15秒） */
+  /* --- 跑馬燈動畫與文字設定 --- */
+  
+  /* 1. 預設給桌機的樣式（速度適中、字體粗大、有光暈） */
   .ticker-text {
     animation: tickerMove 15s linear infinite;
+    font-weight: 900;
+    font-size: 16px;
+    text-shadow: 0px 0px 8px rgba(255,255,255,0.8);
   }
   
-  /* 2. 媒體查詢魔法：當螢幕寬度小於 768px（手機與小平板）時，覆蓋上面的設定 */
+  /* 2. 媒體查詢魔法：當螢幕寬度小於 768px（手機與小平板）時 */
   @media (max-width: 768px) {
     .ticker-text {
-      animation: tickerMove 8s linear infinite; /* 手機螢幕窄，8秒就夠了 */
+      animation: tickerMove 6s linear infinite; /* 保持較快的手機速度 */
+      text-shadow: none; /* 【新增這行】拔除手機端的光暈特效 */
+      font-size: 14px;   /* (可選) 在手機上把字稍微縮小一點，看起來更精緻 */
     }
   }
 </style>
@@ -434,7 +440,7 @@
             position: sticky;
             top: 0;
             z-index: 9999;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         ">
             <div id="tickerContent" class="ticker-text" style="display: inline-block; padding-left: 100%;">
                 </div>
@@ -966,11 +972,6 @@
       
         // 格式化顯示文字
         content.innerText = `【最新情報傳遞中】有人傳送了新資訊：${newContent} ！！`;
-
-        // 【戰況升級】讓字體變粗、變大，並加上一點文字陰影營造立體感
-        content.style.fontWeight = '900';
-        content.style.fontSize = '16px';
-        content.style.textShadow = '0px 0px 8px rgba(255,255,255,0.8)';
 
         // 顯示跑馬燈
         ticker.style.display = 'block';
