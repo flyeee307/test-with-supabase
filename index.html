@@ -968,27 +968,47 @@
        .subscribe();
       
       // 2. 顯示跑馬燈的函數 (加入淡出優化版)
+      // 【新增】在函數的「外面」宣告兩個變數，用來記住鬧鐘的編號
+      let fadeOutTimer = null;
+      let hideTimer = null;
+      
+      // 顯示跑馬燈的函數 (防衝突升級版)
       function showTicker(newContent) {
         const ticker = document.getElementById('realtimeTicker');
         const content = document.getElementById('tickerContent');
       
+        // === 🛡️ 核心修復：砸爛舊鬧鐘 ===
+        // 如果之前已經有設定過計時器，馬上取消它們！
+        if (fadeOutTimer) {
+          clearTimeout(fadeOutTimer);
+        }
+        if (hideTimer) {
+          clearTimeout(hideTimer);
+        }
+        // =================================
+      
+        // 更新跑馬燈內容
         content.innerText = `【最新情報傳遞中】有人傳送了新資訊：${newContent} ！！`;
         
-        // 1. 每次顯示前，確保透明度是 1 (完全不透明)，並設定為顯示
+        // 確保每次有新戰報時，跑馬燈都是最亮、最顯眼的狀態
+        ticker.style.transition = 'none'; // 瞬間亮起，不要有淡入的延遲
         ticker.style.opacity = '1';
         ticker.style.display = 'block';
       
-        // 2. 設定 15 秒後開始「淡出」
+        // 稍微延遲一下再加回漸變效果，這是為了避免跟上面的瞬間亮起衝突
         setTimeout(() => {
-          // 把透明度設為 0，這會觸發我們剛剛在 CSS 寫的 1 秒鐘過渡動畫
+          ticker.style.transition = 'opacity 1s ease';
+        }, 10);
+      
+        // === 重新設定新的鬧鐘，並把編號存進剛剛宣告的變數裡 ===
+        fadeOutTimer = setTimeout(() => {
           ticker.style.opacity = '0'; 
       
-          // 3. 【關鍵】再設定一個 1 秒鐘的計時器，等淡出動畫播完後，才真正從畫面上隱藏它
-          setTimeout(() => {
+          hideTimer = setTimeout(() => {
             ticker.style.display = 'none';
-          }, 1000); // 這裡的 1000 毫秒 (1秒) 剛好對應 CSS 裡的 1s
+          }, 1000); 
       
-        }, 15000); // 這是跑馬燈在畫面上停留的總時間
+        }, 15000); // 重新開始倒數 15 秒
       }
       
       // 完整版新增留言函數（包含文字、圖片、暱稱）
