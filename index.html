@@ -441,6 +441,8 @@
             top: 0;
             z-index: 9999;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            /* 👇 【新增這行】告訴瀏覽器：只要透明度發生改變，請用 1 秒鐘的時間平滑過渡 */
+            transition: opacity 1s ease;
         ">
             <div id="tickerContent" class="ticker-text" style="display: inline-block; padding-left: 100%;">
                 </div>
@@ -965,21 +967,28 @@
        )
        .subscribe();
       
-      // 2. 顯示跑馬燈的函數
+      // 2. 顯示跑馬燈的函數 (加入淡出優化版)
       function showTicker(newContent) {
         const ticker = document.getElementById('realtimeTicker');
         const content = document.getElementById('tickerContent');
       
-        // 格式化顯示文字
         content.innerText = `【最新情報傳遞中】有人傳送了新資訊：${newContent} ！！`;
-
-        // 顯示跑馬燈
+        
+        // 1. 每次顯示前，確保透明度是 1 (完全不透明)，並設定為顯示
+        ticker.style.opacity = '1';
         ticker.style.display = 'block';
       
-        // 15 秒後自動隱藏（或是讓它一直跑直到下一則訊息）
+        // 2. 設定 15 秒後開始「淡出」
         setTimeout(() => {
-          ticker.style.display = 'none';
-        }, 15000); // 這裡的 15000 是指整個紅色框框「存活」的時間（15秒後消失），你可以保持不變
+          // 把透明度設為 0，這會觸發我們剛剛在 CSS 寫的 1 秒鐘過渡動畫
+          ticker.style.opacity = '0'; 
+      
+          // 3. 【關鍵】再設定一個 1 秒鐘的計時器，等淡出動畫播完後，才真正從畫面上隱藏它
+          setTimeout(() => {
+            ticker.style.display = 'none';
+          }, 1000); // 這裡的 1000 毫秒 (1秒) 剛好對應 CSS 裡的 1s
+      
+        }, 15000); // 這是跑馬燈在畫面上停留的總時間
       }
       
       // 完整版新增留言函數（包含文字、圖片、暱稱）
