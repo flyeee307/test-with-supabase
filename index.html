@@ -410,7 +410,7 @@
   
   /* 1. 預設給桌機的樣式（速度適中、字體粗大、有光暈） */
   .ticker-text {
-    animation: tickerMove 15s linear infinite;
+    animation: tickerMove 20s linear infinite;
     font-weight: 900;
     font-size: 16px;
     text-shadow: 0px 0px 8px rgba(255,255,255,0.8);
@@ -419,7 +419,7 @@
   /* 2. 媒體查詢魔法：當螢幕寬度小於 768px（手機與小平板）時 */
   @media (max-width: 768px) {
     .ticker-text {
-      animation: tickerMove 6s linear infinite; /* 保持較快的手機速度 */
+      animation: tickerMove 10s linear infinite; /* 保持較快的手機速度 */
       text-shadow: none; /* 【新增這行】拔除手機端的光暈特效 */
       font-size: 14px;   /* (可選) 在手機上把字稍微縮小一點，看起來更精緻 */
     }
