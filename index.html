@@ -859,78 +859,90 @@
           }
         
           // 6. 最關鍵的魔法：用迴圈 (forEach) 把每一筆資料變成 HTML
-          data.forEach(function(note) {
-            
-            let imageHtml = '';
-            if (note.image_url) {
-              imageHtml = `<img src="${note.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
-            }
-        
-            // 【修改】在文字內容的上方，加上一行顯示 nickname 的 HTML，並套用航海王風格的金黃色
-            const noteHtml = `
-              <div style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px;">
-                <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
-                  ⚓ ${note.nickname || '無名海兵'}
+            data.forEach(function(note) {
+              let imageHtml = '';
+              if (note.image_url) {
+                imageHtml = `<img src="${note.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
+              }
+          
+              // 【修改重點】：在最外層的 div 加上 id="note-${note.id}"
+              const noteHtml = `
+                <div id="note-${note.id}" style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px; margin-bottom: 10px;">
+                  <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
+                    ⚓ ${note.nickname || '無名海兵'}
+                  </div>
+                  <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6; class="note-content">
+                    ${note.content}
+                  </div>
+                  ${imageHtml}
                 </div>
-                <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">
-                  ${note.content}
-                </div>
-                ${imageHtml}
-              </div>
-            `;
-            
-            listContainer.innerHTML += noteHtml;
-          });
+              `;
+              
+              listContainer.innerHTML += noteHtml;
+            });
         }
 
-
-     // 1. 初始化見聞色霸氣（訂閱 Realtime 頻道）
+     // 1. 初始化進階見聞色霸氣（訂閱 Realtime 頻道，監聽所有變動，但精準播報）
      const channel = supabaseClient
        .channel('battle-updates') 
        .on(
          'postgres_changes', 
          {
-           event: 'INSERT',     
+           event: '*', // 依然監聽戰場上的「所有」變化
            schema: 'public',
            table: 'notes'       
          },
          (payload) => {
-           console.log('偵測到新情報！', payload);
-           
-           // 動作一：呼叫跑馬燈
-           showTicker(payload.new.content); 
-     
-           // 動作二：【進階做法】局部更新 DOM
-           const newNote = payload.new; // 這是包含新留言所有資訊的包裹
+           console.log('偵測到戰場變化！', payload.eventType, payload);
            const listContainer = document.getElementById('notesList');
      
-           // (細節優化) 如果公佈欄原本顯示「還沒有筆記」，把它清空，準備貼上第一張
-           if (listContainer.innerHTML.includes('目前還沒有任何戰役筆記')) {
-             listContainer.innerHTML = '';
+           switch (payload.eventType) {
+             
+             case 'INSERT':
+               // 【保留】只有新增情報時，才呼叫跑馬燈大肆宣傳！
+               showTicker(`新情報加入：${payload.new.content}`);
+               
+               let insertImageHtml = '';
+               if (payload.new.image_url) {
+                 insertImageHtml = `<img src="${payload.new.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
+               }
+     
+               const newHtml = `
+                 <div id="note-${payload.new.id}" style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px; margin-bottom: 10px; animation: fadeIn 0.5s ease;">
+                   <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
+                     ⚓ ${payload.new.nickname || '無名海兵'}
+                   </div>
+                   <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;" class="note-content">
+                     ${payload.new.content}
+                   </div>
+                   ${insertImageHtml}
+                 </div>
+               `;
+               listContainer.insertAdjacentHTML('afterbegin', newHtml);
+               break;
+     
+             case 'UPDATE':
+               // 【移除跑馬燈】這裡不呼叫 showTicker，只默默更新下方的留言卡片
+               const cardToUpdate = document.getElementById(`note-${payload.new.id}`);
+               if (cardToUpdate) {
+                 const contentDiv = cardToUpdate.querySelector('.note-content');
+                 if(contentDiv) contentDiv.innerText = payload.new.content;
+                 
+                 // 依然保留微小的閃爍特效，讓正在看留言板的人知道內容變了
+                 cardToUpdate.style.transition = 'background-color 0.5s';
+                 cardToUpdate.style.backgroundColor = 'var(--gold-light)';
+                 setTimeout(() => cardToUpdate.style.backgroundColor = 'var(--smoke)', 1000);
+               }
+               break;
+     
+             case 'DELETE':
+               // 【移除跑馬燈】這裡不呼叫 showTicker，只默默把卡片抽掉
+               const cardToDelete = document.getElementById(`note-${payload.old.id}`);
+               if (cardToDelete) {
+                 cardToDelete.remove();
+               }
+               break;
            }
-     
-           // 處理圖片的 HTML（跟 fetchNotes 裡面的邏輯一模一樣）
-           let imageHtml = '';
-           if (newNote.image_url) {
-             imageHtml = `<img src="${newNote.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
-           }
-     
-           // 製作這筆新留言的 HTML 卡片 
-           // (我偷偷幫你加了 animation: fadeIn 0.5s ease; 讓它出現時會有淡入特效！)
-           const noteHtml = `
-             <div style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px; animation: fadeIn 0.5s ease;">
-               <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
-                 ⚓ ${newNote.nickname || '無名海兵'}
-               </div>
-               <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">
-                 ${newNote.content}
-               </div>
-               ${imageHtml}
-             </div>
-           `;
-     
-           // 核心魔法：把這張新卡片「插」在留言板的最上方！
-           listContainer.insertAdjacentHTML('afterbegin', noteHtml);
          }
        )
        .subscribe();
