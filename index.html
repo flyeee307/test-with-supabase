@@ -737,15 +737,20 @@
               <div class="card-icon icon-gold">✎</div>新增戰役筆記
             </div>
             
-            <div style="display: flex; gap: 10px;">
-              <input type="text" id="noteInput" placeholder="輸入你想紀錄的內容..." 
-                     style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-              <input type="file" id="imageInput" accept="image/*" style="padding: 10px;">
-              <button onclick="addNote()" 
-                      style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
-                送出紀錄
-              </button>
-            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+             
+             <input type="text" id="nicknameInput" placeholder="你的陣營 / 暱稱..." 
+                    style="width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+             
+             <input type="text" id="noteInput" placeholder="輸入你想紀錄的內容..." 
+                    style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+             
+             <input type="file" id="imageInput" accept="image/*" style="padding: 10px;">
+             
+             <button onclick="addNote()" style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
+               送出紀錄
+             </button>
+           </div>
           </div>
         </div>
         <div class="card" style="margin-top: 20px;">
