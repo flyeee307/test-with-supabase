@@ -889,20 +889,25 @@
         // ==========================================
         // 3. 【修改】升級版的 checkUser 函數
         // ==========================================
+        // 【新增】準備一個空盒子，用來記住目前登入的將領是誰
+        let currentUser = null; 
+        
+        // === 升級版：登入檢查與記憶 ===
         async function checkUser() {
           const { data: { user } } = await supabaseClient.auth.getUser();
           
+          // 把抓到的使用者資料放進全域變數盒子裡
+          currentUser = user; 
+        
           const userStatus = document.getElementById('userStatus');
           const loginBtn = document.getElementById('loginBtn');
-          const logoutBtn = document.getElementById('logoutBtn'); // 抓取登出按鈕
+          const logoutBtn = document.getElementById('logoutBtn');
         
           if (user) {
-            // 【已登入狀態】：顯示名字、隱藏登入按鈕、顯示登出按鈕
             userStatus.innerText = `歡迎歸隊，${user.user_metadata.full_name}！`;
             loginBtn.style.display = 'none'; 
             logoutBtn.style.display = 'inline-block'; 
           } else {
-            // 【未登入狀態】：清空名字、顯示登入按鈕、隱藏登出按鈕
             userStatus.innerText = '';
             loginBtn.style.display = 'inline-block'; 
             logoutBtn.style.display = 'none'; 
@@ -937,27 +942,40 @@
           }
         
           // 6. 最關鍵的魔法：用迴圈 (forEach) 把每一筆資料變成 HTML
-            data.forEach(function(note) {
-              let imageHtml = '';
-              if (note.image_url) {
-                imageHtml = `<img src="${note.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
-              }
+          data.forEach(function(note) {
+            
+            let imageHtml = '';
+            if (note.image_url) {
+              imageHtml = `<img src="${note.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
+            }
           
-              // 【修改重點】：在最外層的 div 加上 id="note-${note.id}"
-              const noteHtml = `
-                <div id="note-${note.id}" style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px; margin-bottom: 10px;">
-                  <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
-                    ⚓ ${note.nickname || '無名海兵'}
-                  </div>
-                  <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6; class="note-content">
-                    ${note.content}
-                  </div>
-                  ${imageHtml}
+            // === 🛡️ 【新增重點】權限比對魔法 ===
+            // 檢查：(1)目前有人登入嗎？ (2)登入者的 ID 等於這則留言的 user_id 嗎？
+            const isMyPost = currentUser && currentUser.id === note.user_id;
+            
+            // 如果是我發的，就產出一個紅色的刪除按鈕；如果不是，就產出一段空白
+            const deleteBtnHtml = isMyPost 
+              ? `<button onclick="deleteNote(${note.id})" style="float: right; background: none; border: none; color: #dc3545; cursor: pointer; font-size: 12px; font-weight: bold;">[撤回]</button>` 
+              : '';
+            // ===================================
+          
+            // 【修改】把剛剛做好的 deleteBtnHtml 塞進你的卡片 HTML 裡
+            const noteHtml = `
+              <div id="note-${note.id}" style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px; margin-bottom: 10px;">
+                
+                <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
+                  ⚓ ${note.nickname || '無名海兵'}
+                  ${deleteBtnHtml} </div>
+                
+                <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;" class="note-content">
+                  ${note.content}
                 </div>
-              `;
-              
-              listContainer.innerHTML += noteHtml;
-            });
+                ${imageHtml}
+              </div>
+            `;
+            
+            listContainer.innerHTML += noteHtml;
+          });
         }
 
      // 1. 初始化進階見聞色霸氣（訂閱 Realtime 頻道，監聽所有變動，但精準播報）
@@ -1144,6 +1162,25 @@
             nicknameInput.value = ''; 
             fetchNotes();             
           }
+        }
+        // === 【新增】刪除留言功能 ===
+        async function deleteNote(noteId) {
+          // 加上防呆確認視窗，避免手滑誤刪
+          const isConfirmed = confirm("⚠️ 確定要撤回這則戰報嗎？這將無法復原！");
+          if (!isConfirmed) return; // 如果按取消，就立刻煞車停止
+        
+          // 向 Supabase 發送刪除指令
+          const { error } = await supabaseClient
+            .from('notes')
+            .delete()
+            .eq('id', noteId); // 指定要刪除哪一個 ID
+        
+          if (error) {
+            console.error('刪除失敗:', error);
+            alert('撤回失敗：' + error.message);
+          } 
+          // 💡 注意：我們不用寫成功後要幹嘛，因為你之前已經寫好了「見聞色霸氣 (Realtime)」，
+          // 只要資料庫一刪除，你的畫面就會自動把那張卡片抽掉！
         }
 
         // 執行函數
