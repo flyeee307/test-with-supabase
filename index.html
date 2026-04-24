@@ -895,7 +895,11 @@
           (payload) => {
             // 當事件發生時，payload 會包含新資料
             console.log('偵測到新情報！', payload);
-            showTicker(payload.new.content); // 呼叫顯示跑馬燈的函數
+            // 動作一：呼叫跑馬燈
+            showTicker(payload.new.content); 
+      
+            // 動作二：直接呼叫抓取資料函數，讓下方的留言板同步更新！
+            fetchNotes();
           }
         )
         .subscribe();
