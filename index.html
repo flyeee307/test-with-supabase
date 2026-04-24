@@ -857,49 +857,30 @@
         async function addNote() {
           const textInput = document.getElementById('noteInput');
           const imageInput = document.getElementById('imageInput');
+          // 【新增】抓取暱稱輸入框
+          const nicknameInput = document.getElementById('nicknameInput');
+          
           const textValue = textInput.value;
-          const imageFile = imageInput.files[0]; // 抓取使用者選擇的檔案
+          const imageFile = imageInput.files[0];
+          // 【新增】抓取使用者打的暱稱。如果他沒打字，我們就預設給他一個「無名海兵」的稱號！
+          const nicknameValue = nicknameInput.value || '無名海兵'; 
         
           if (!textValue && !imageFile) {
             alert("請輸入文字或選擇一張圖片！");
             return;
           }
         
-          let finalImageUrl = null; // 預設沒有圖片網址
+          // ... (中間上傳圖片的程式碼保持不變) ...
         
-          // === 步驟一：如果有選圖片，先上傳到 Storage ===
-          if (imageFile) {
-            // 幫圖片取一個獨一無二的名字 (用目前的時間戳記加上原本檔名，避免檔名重複被覆蓋)
-            const uniqueFileName = Date.now() + '_' + imageFile.name;
-        
-            // 上傳到剛剛建的 'images' 儲存桶
-            const { data: uploadData, error: uploadError } = await supabaseClient
-              .storage
-              .from('images')
-              .upload(uniqueFileName, imageFile);
-        
-            if (uploadError) {
-              console.error('圖片上傳失敗:', uploadError);
-              alert('圖片上傳失敗，請看控制台');
-              return; // 上傳失敗就中斷
-            }
-        
-            // 上傳成功後，取得這張圖片的公開網址
-            const { data: publicUrlData } = supabaseClient
-              .storage
-              .from('images')
-              .getPublicUrl(uniqueFileName);
-            
-            finalImageUrl = publicUrlData.publicUrl; // 把拿到的網址存起來
-          }
-        
-          // === 步驟二：將文字和圖片網址一起存進 Database ===
+          // === 儲存進 Database 的地方 ===
           const { data, error } = await supabaseClient
             .from('notes')
             .insert([
               { 
                 content: textValue, 
-                image_url: finalImageUrl // 把剛剛拿到的網址存進新開的欄位
+                image_url: finalImageUrl,
+                // 【新增】把剛剛抓到的暱稱，存進你在第一步建立的 nickname 欄位裡
+                nickname: nicknameValue 
               }
             ]);
         
@@ -907,10 +888,11 @@
             console.error('資料庫新增失敗:', error);
             alert('資料庫新增失敗');
           } else {
-            // 成功後的收尾工作
-            textInput.value = '';     // 清空文字框
-            imageInput.value = '';    // 清空檔案選擇器
-            fetchNotes();             // 重新讀取留言板畫面
+            textInput.value = '';     
+            imageInput.value = '';
+            // 【新增】送出後順便清空暱稱框
+            nicknameInput.value = '';    
+            fetchNotes();             
           }
         }
 
