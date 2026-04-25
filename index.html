@@ -911,8 +911,6 @@
         // 建立連線：將常數名稱改為 supabaseClient，避免與 CDN 載入的 supabase 衝突
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-     
-
         // ==========================================
         // 1. 【在這裡貼上】Google 登入的兩個函數
         // ==========================================
@@ -987,14 +985,6 @@
           }
         
           const listContainer = document.getElementById('promptsList');
-          
-          // 處理資料庫是空的狀況
-          if (data.length === 0) {
-            listContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">目前還沒有任何提示詞，搶先發布第一筆吧！🚀</div>';
-            return; 
-          }
-        
-          // 清空容器準備畫新的卡片
           listContainer.innerHTML = '';
         
           // 使用我們剛剛寫好的藍圖來畫卡片
