@@ -1034,26 +1034,38 @@
              break;
      
              case 'UPDATE':
-               // 【移除跑馬燈】這裡不呼叫 showTicker，只默默更新下方的留言卡片
-               const cardToUpdate = document.getElementById(`note-${payload.new.id}`);
-               if (cardToUpdate) {
-                 const contentDiv = cardToUpdate.querySelector('.note-content');
-                 if(contentDiv) contentDiv.innerText = payload.new.content;
-                 
-                 // 依然保留微小的閃爍特效，讓正在看留言板的人知道內容變了
-                 cardToUpdate.style.transition = 'background-color 0.5s';
-                 cardToUpdate.style.backgroundColor = 'var(--gold-light)';
-                 setTimeout(() => cardToUpdate.style.backgroundColor = 'var(--smoke)', 1000);
+             // 默默更新下方的留言卡片
+             const cardToUpdate = document.getElementById(`note-${payload.new.id}`);
+             if (cardToUpdate) {
+               // 1. 更新文字內容
+               const contentDiv = cardToUpdate.querySelector('.note-content');
+               if(contentDiv) {
+                  contentDiv.innerText = payload.new.content;
+                  // 如果是銷毀訊息，給它加個斜體和灰色樣式，更有墓碑感
+                  if (payload.new.content.includes('銷毀')) {
+                     contentDiv.style.color = '#888';
+                     contentDiv.style.fontStyle = 'italic';
+                  }
                }
-               break;
+               
+               // 2. 如果圖片被清空了 (image_url 變成 null)，就把卡片裡的 img 標籤移除
+               const imgEl = cardToUpdate.querySelector('img');
+               if (!payload.new.image_url && imgEl) {
+                 imgEl.remove();
+               }
      
-             case 'DELETE':
-               // 【移除跑馬燈】這裡不呼叫 showTicker，只默默把卡片抽掉
-               const cardToDelete = document.getElementById(`note-${payload.old.id}`);
-               if (cardToDelete) {
-                 cardToDelete.remove();
+               // 3. 如果情報已經銷毀，把 [撤回] 按鈕隱藏或移除
+               if (payload.new.content.includes('銷毀')) {
+                 const btn = cardToUpdate.querySelector('button');
+                 if (btn) btn.remove();
                }
-               break;
+               
+               // 保留微小的閃爍特效
+               cardToUpdate.style.transition = 'background-color 0.5s';
+               cardToUpdate.style.backgroundColor = 'var(--gold-light)';
+               setTimeout(() => cardToUpdate.style.backgroundColor = 'var(--smoke)', 1000);
+             }
+             break;
            }
          }
        )
@@ -1212,24 +1224,25 @@
             clearImageSelection();
           }
         }
-        // === 【新增】刪除留言功能 ===
+        // === 【升級版】撤回戰報 (墓碑機制) ===
         async function deleteNote(noteId) {
-          // 加上防呆確認視窗，避免手滑誤刪
-          const isConfirmed = confirm("⚠️ 確定要撤回這則戰報嗎？這將無法復原！");
-          if (!isConfirmed) return; // 如果按取消，就立刻煞車停止
+          // 更改提示文字，符合情境
+          const isConfirmed = confirm("⚠️ 確定要撤回嗎？這將會清空情報，並留下「已銷毀」的標記！");
+          if (!isConfirmed) return;
         
-          // 向 Supabase 發送刪除指令
+          // 【關鍵修改】：不再使用 .delete()，而是使用 .update()
           const { error } = await supabaseClient
             .from('notes')
-            .delete()
-            .eq('id', noteId); // 指定要刪除哪一個 ID
+            .update({ 
+              content: '📜 [最高機密] 此戰報已被發布者銷毀。', 
+              image_url: null // 同時把圖片清空
+            })
+            .eq('id', noteId);
         
           if (error) {
-            console.error('刪除失敗:', error);
+            console.error('撤回失敗:', error);
             alert('撤回失敗：' + error.message);
           } 
-          // 💡 注意：我們不用寫成功後要幹嘛，因為你之前已經寫好了「見聞色霸氣 (Realtime)」，
-          // 只要資料庫一刪除，你的畫面就會自動把那張卡片抽掉！
         }
 
         // 執行函數
