@@ -797,6 +797,17 @@
                      style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
               
               <input type="file" id="imageInput" accept="image/*" style="padding: 10px;">
+
+              <div style="margin-bottom: 10px;">
+                <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect()">
+              
+                <div id="imagePreviewContainer" style="display: none; margin-top: 8px; align-items: center; gap: 10px; background: var(--smoke); padding: 8px; border-radius: 4px; border-left: 3px solid var(--gold-dark);">
+                  <span id="fileNameDisplay" style="font-size: 13px; color: var(--navy); font-weight: bold;"></span>
+                  <button type="button" onclick="clearImageSelection()" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">
+                    ✖ 撤銷照片
+                  </button>
+                </div>
+              </div>
               
               <button onclick="addNote()" style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
                 送出紀錄
@@ -1093,6 +1104,35 @@
       
         }, 15000); // 重新開始倒數 15 秒
       }
+
+      // === 【新增】1. 監聽照片選擇動作 ===
+      function handleImageSelect() {
+        const fileInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+      
+        // 如果使用者真的有選到檔案 (長度大於 0)
+        if (fileInput.files && fileInput.files.length > 0) {
+          // 把檔名寫上去
+          fileNameDisplay.innerText = `📎 準備夾帶檔案：${fileInput.files[0].name}`;
+          // 把隱藏的區塊顯示出來 (設定為 flex 讓排版好看)
+          previewContainer.style.display = 'flex'; 
+        } else {
+          // 如果使用者點了選擇檔案，但最後按了「取消」，就恢復原狀
+          clearImageSelection();
+        }
+      }
+      
+      // === 【新增】2. 撤銷選擇的魔法 ===
+      function clearImageSelection() {
+        const fileInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+      
+        // 【最關鍵的一步】把 input 的值清空，這樣瀏覽器就會忘記剛剛選的照片
+        fileInput.value = ''; 
+        // 再次把預覽區塊隱藏起來
+        previewContainer.style.display = 'none'; 
+      }
       
       // 完整版新增留言函數（包含文字、圖片、暱稱，加入登入身分檢查）
       async function addNote() {
@@ -1167,9 +1207,11 @@
           } else {
             // 成功後清空所有輸入框，並重新讀取留言板
             textInput.value = '';     
-            imageInput.value = '';    
+            // imageInput.value = '';    
             nicknameInput.value = ''; 
-            // fetchNotes();             
+            // fetchNotes();   
+            // 🛡️ 【關鍵修改】：用這個函數一次把檔案和預覽畫面清得乾乾淨淨！
+            clearImageSelection();
           }
         }
         // === 【新增】刪除留言功能 ===
