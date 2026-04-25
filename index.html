@@ -995,27 +995,34 @@
            switch (payload.eventType) {
              
              case 'INSERT':
-               // 【保留】只有新增情報時，才呼叫跑馬燈大肆宣傳！
-               showTicker(`新情報加入：${payload.new.content}`);
-               
-               let insertImageHtml = '';
-               if (payload.new.image_url) {
-                 insertImageHtml = `<img src="${payload.new.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
-               }
+             // 1. 只有新增情報時，才呼叫跑馬燈大肆宣傳
+             showTicker(`新情報加入：${payload.new.content}`);
+             
+             // === 🛡️ 【關鍵修復】比對權限，決定要不要畫出「撤回」按鈕 ===
+             const isMyPost = currentUser && currentUser.id === payload.new.user_id;
+             const deleteBtnHtml = isMyPost 
+               ? `<button onclick="deleteNote(${payload.new.id})" style="float: right; background: none; border: none; color: #dc3545; cursor: pointer; font-size: 12px; font-weight: bold;">[撤回]</button>` 
+               : '';
+             // ========================================================
      
-               const newHtml = `
-                 <div id="note-${payload.new.id}" style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px; margin-bottom: 10px; animation: fadeIn 0.5s ease;">
-                   <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
-                     ⚓ ${payload.new.nickname || '無名海兵'}
-                   </div>
-                   <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;" class="note-content">
-                     ${payload.new.content}
-                   </div>
-                   ${insertImageHtml}
+             let insertImageHtml = '';
+             if (payload.new.image_url) {
+               insertImageHtml = `<img src="${payload.new.image_url}" style="max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border);">`;
+             }
+     
+             const newHtml = `
+               <div id="note-${payload.new.id}" style="padding: 14px; background: var(--smoke); border-left: 3px solid var(--navy); border-radius: 4px; margin-bottom: 10px; animation: fadeIn 0.5s ease;">
+                 <div style="font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-bottom: 4px;">
+                   ⚓ ${payload.new.nickname || '無名海兵'}
+                   ${deleteBtnHtml} </div>
+                 <div style="font-size: 14px; color: var(--text-primary); line-height: 1.6;" class="note-content">
+                   ${payload.new.content}
                  </div>
-               `;
-               listContainer.insertAdjacentHTML('afterbegin', newHtml);
-               break;
+                 ${insertImageHtml}
+               </div>
+             `;
+             listContainer.insertAdjacentHTML('afterbegin', newHtml);
+             break;
      
              case 'UPDATE':
                // 【移除跑馬燈】這裡不呼叫 showTicker，只默默更新下方的留言卡片
