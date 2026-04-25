@@ -985,6 +985,14 @@
           }
         
           const listContainer = document.getElementById('promptsList');
+          
+          // 處理資料庫是空的狀況
+          if (data.length === 0) {
+            listContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">目前還沒有任何提示詞，搶先發布第一筆吧！</div>';
+            return; // 這個 return 現在乖乖待在函數裡面了！
+          }
+        
+          // 清空容器準備畫新的卡片
           listContainer.innerHTML = '';
         
           // 使用我們剛剛寫好的藍圖來畫卡片
