@@ -796,9 +796,7 @@
               <input type="text" id="noteInput" placeholder="輸入你想紀錄的內容..." 
                      style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
               
-              <input type="file" id="imageInput" accept="image/*" style="padding: 10px;">
-
-              <div style="margin-bottom: 10px;">
+              <div style="margin-bottom: 10px; padding: 10px;">
                 <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect()">
               
                 <div id="imagePreviewContainer" style="display: none; margin-top: 8px; align-items: center; gap: 10px; background: var(--smoke); padding: 8px; border-radius: 4px; border-left: 3px solid var(--gold-dark);">
@@ -808,6 +806,7 @@
                   </button>
                 </div>
               </div>
+            </div>
               
               <button onclick="addNote()" style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
                 送出紀錄
