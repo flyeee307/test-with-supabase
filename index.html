@@ -798,13 +798,19 @@
               <div style="margin-bottom: 10px; padding: 10px;">
                 <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect()">
               
-                <div id="imagePreviewContainer" style="display: none; margin-top: 8px; align-items: center; gap: 10px; background: var(--smoke); padding: 8px; border-radius: 4px; border-left: 3px solid var(--gold-dark);">
-                  <span id="fileNameDisplay" style="font-size: 13px; color: var(--navy); font-weight: bold;"></span>
-                  <button type="button" onclick="clearImageSelection()" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">
-                    ✖ 撤銷照片
-                  </button>
+                <div id="imagePreviewContainer" style="display: none; margin-top: 8px; flex-direction: column; align-items: flex-start; gap: 10px; background: var(--smoke); padding: 10px; border-radius: 4px; border-left: 3px solid var(--gold-dark);">
+                  
+                  <img id="previewImage" style="max-height: 150px; border-radius: 4px; border: 1px solid #ccc; display: none; object-fit: contain;">
+                  
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span id="fileNameDisplay" style="font-size: 13px; color: var(--navy); font-weight: bold;"></span>
+                    <button type="button" onclick="clearImageSelection()" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">
+                      ✖ 撤銷照片
+                    </button>
+                  </div>
                 </div>
               </div>
+             
               <button onclick="addNote()" style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
                 送出紀錄
               </button>
@@ -1115,33 +1121,43 @@
         }, 15000); // 重新開始倒數 15 秒
       }
 
-      // === 【新增】1. 監聽照片選擇動作 ===
+      // === 1. 監聽照片選擇動作 (加入預覽縮圖功能) ===
       function handleImageSelect() {
         const fileInput = document.getElementById('imageInput');
         const previewContainer = document.getElementById('imagePreviewContainer');
         const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const previewImage = document.getElementById('previewImage'); // 抓取新增的圖片標籤
       
-        // 如果使用者真的有選到檔案 (長度大於 0)
         if (fileInput.files && fileInput.files.length > 0) {
-          // 把檔名寫上去
-          fileNameDisplay.innerText = `📎 準備夾帶檔案：${fileInput.files[0].name}`;
-          // 把隱藏的區塊顯示出來 (設定為 flex 讓排版好看)
+          const file = fileInput.files[0];
+          fileNameDisplay.innerText = `📎 準備夾帶：${file.name}`;
+          
+          // ✨ 【預覽魔法】：讓瀏覽器為這張選取的照片產生一個暫時的網址
+          const objectUrl = URL.createObjectURL(file);
+          previewImage.src = objectUrl;         // 把暫時網址交給 img 標籤
+          previewImage.style.display = 'block'; // 把圖片顯示出來
+      
           previewContainer.style.display = 'flex'; 
         } else {
-          // 如果使用者點了選擇檔案，但最後按了「取消」，就恢復原狀
           clearImageSelection();
         }
       }
       
-      // === 【新增】2. 撤銷選擇的魔法 ===
+      // === 2. 撤銷選擇的魔法 (加入打掃縮圖功能) ===
       function clearImageSelection() {
         const fileInput = document.getElementById('imageInput');
         const previewContainer = document.getElementById('imagePreviewContainer');
+        const previewImage = document.getElementById('previewImage');
       
-        // 【最關鍵的一步】把 input 的值清空，這樣瀏覽器就會忘記剛剛選的照片
         fileInput.value = ''; 
-        // 再次把預覽區塊隱藏起來
         previewContainer.style.display = 'none'; 
+      
+        // ✨ 【打掃戰場】：清空圖片並釋放瀏覽器記憶體
+        if (previewImage.src) {
+          URL.revokeObjectURL(previewImage.src); // 養成好習慣：把剛剛借用的暫時網址還給瀏覽器
+          previewImage.src = '';
+          previewImage.style.display = 'none';
+        }
       }
       
       // 完整版新增留言函數（包含文字、圖片、暱稱，加入登入身分檢查）
