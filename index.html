@@ -788,7 +788,7 @@
             <div class="card-title">
               <div class="card-icon icon-gold">✎</div>新增戰役筆記
             </div>
-            <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+            <!-- <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
               <input type="text" id="nicknameInput" placeholder="你的陣營 / 暱稱..." 
                      style="width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
               
@@ -813,6 +813,36 @@
              
               <button onclick="addNote()" style="padding: 10px 20px; background: #0A1628; color: white; border: none; border-radius: 6px; cursor: pointer;">
                 送出紀錄
+              </button>
+            </div> -->
+
+            <div id="prompt-form" style="background: var(--smoke); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+              
+              <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #28a745; font-weight: bold;">✅ 正向提示詞 (Positive Prompt)</label>
+                <textarea id="positiveInput" rows="4" placeholder="描述你想要生成的精彩畫面..." 
+                          style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-family: monospace;"></textarea>
+              </div>
+            
+              <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #dc3545; font-weight: bold;">❌ 反向提示詞 (Negative Prompt)</label>
+                <textarea id="negativeInput" rows="2" placeholder="你不希望在圖片中看到的元素..." 
+                          style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-family: monospace;"></textarea>
+              </div>
+            
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start;">
+                <input type="text" id="nicknameInput" placeholder="你的暱稱..." 
+                       style="width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                
+                <div style="flex: 1; min-width: 250px;">
+                  <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect()">
+                  <div id="imagePreviewContainer" style="display: none; margin-top: 8px; flex-direction: column; ...">
+                      </div>
+                </div>
+              </div>
+            
+              <button onclick="addPrompt()" style="margin-top: 15px; width: 100%; padding: 12px; background: var(--navy); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                🚀 發布至提示詞庫
               </button>
             </div>
 
@@ -1163,86 +1193,73 @@
         }
       }
       
-      // 完整版新增留言函數（包含文字、圖片、暱稱，加入登入身分檢查）
-      async function addNote() {
-      // === 【新增】第一關：檢查是否有登入的通行證 ===
+      // === 新增提示詞函數 (取代原本的 addNote) ===
+      async function addPrompt() {
+        // 1. 身分檢查
         const { data: { user } } = await supabaseClient.auth.getUser();
-        
         if (!user) {
-          alert("⛔ 海軍本部警告：請先使用 Google 帳號登入，才能發布戰報！");
-          return; // 煞車！強制停止後面的程式碼執行
-        }
-        // ===========================================
-      
-        const textInput = document.getElementById('noteInput');
-        const imageInput = document.getElementById('imageInput');
-        const nicknameInput = document.getElementById('nicknameInput');
-        
-        const textValue = textInput.value;
-        const imageFile = imageInput.files[0];
-      
-        // 【優化小巧思】如果他沒填暱稱，我們就直接抓他 Google 帳號的名字當暱稱！
-        const nicknameValue = nicknameInput.value || user.user_metadata.full_name; 
-      
-        if (!textValue && !imageFile) {
-          alert("請輸入文字或選擇一張圖片！");
+          alert("⛔ 請先登入 Google 帳號，才能分享你的咒語！");
           return;
         }
       
-        // 宣告一個變數來準備裝圖片網址（這就是剛剛報錯找不到的變數！）
-        let finalImageUrl = null; 
+        // 2. 抓取所有欄位的值
+        const positiveText = document.getElementById('positiveInput').value.trim();
+        const negativeText = document.getElementById('negativeInput').value.trim();
+        const nicknameValue = document.getElementById('nicknameInput').value.trim() || user.user_metadata.full_name;
+        const imageFile = document.getElementById('imageInput').files[0];
       
-        // === 步驟一：如果有選圖片，先上傳到 Storage ===
-        if (imageFile) {
-          const uniqueFileName = Date.now() + '_' + imageFile.name;
-      
-          const { data: uploadData, error: uploadError } = await supabaseClient
-            .storage
-            .from('images')
-            .upload(uniqueFileName, imageFile);
-      
-          if (uploadError) {
-            console.error('圖片上傳失敗:', uploadError);
-            alert('圖片上傳失敗，請看控制台');
-            return; 
-          }
-      
-          const { data: publicUrlData } = supabaseClient
-            .storage
-            .from('images')
-            .getPublicUrl(uniqueFileName);
-          
-          // 將取得的網址裝進剛剛宣告的變數裡
-          finalImageUrl = publicUrlData.publicUrl; 
+        // 3. 基本驗證：正向提示詞是必填的
+        if (!positiveText) {
+          alert("請至少輸入一段正向提示詞！");
+          return;
         }
       
-        // === 步驟二：將文字、圖片網址、暱稱一起存進 Database ===
-        const { data, error } = await supabaseClient
-          .from('notes')
+        // 4. 處理圖片上傳 (與之前邏輯相同，但目標改為 prompts)
+        let imageUrl = null;
+        if (imageFile) {
+          const fileExt = imageFile.name.split('.').pop();
+          const fileName = `${Math.random()}.${fileExt}`;
+          const filePath = `prompt-images/${fileName}`;
+      
+          const { error: uploadError } = await supabaseClient.storage
+            .from('images')
+            .upload(filePath, imageFile);
+      
+          if (uploadError) {
+            alert('圖片上傳失敗: ' + uploadError.message);
+            return;
+          }
+      
+          const { data: urlData } = supabaseClient.storage
+            .from('images')
+            .getPublicUrl(filePath);
+          imageUrl = urlData.publicUrl;
+        }
+      
+        // 5. 將資料寫入新的 prompts 資料表
+        const { error } = await supabaseClient
+          .from('prompts') // 🎯 目標改為 prompts 表格
           .insert([
-            { 
-              content: textValue, 
-              image_url: finalImageUrl,
-              nickname: nicknameValue 
-              // user_id 會由後台自動帶入，不需要寫在這裡
+            {
+              positive_prompt: positiveText,
+              negative_prompt: negativeText,
+              nickname: nicknameValue, // 確保你的 prompts 表格有這一欄，若無請見下方說明
+              image_url: imageUrl
             }
           ]);
       
-        // === 🛡️ 【關鍵修改】檢查是否有被 Trigger 擋下 ===
-          if (error) {
-            console.error('資料庫新增失敗:', error);
-            // 🛡️ 【關鍵修改】：讓 alert 顯示資料庫守衛 (Trigger) 傳來的專屬警告訊息
-            alert(error.message || '資料庫新增失敗，請稍後再試。'); 
-          } else {
-            // 成功後清空所有輸入框，並重新讀取留言板
-            textInput.value = '';     
-            // imageInput.value = '';    
-            nicknameInput.value = ''; 
-            // fetchNotes();   
-            // 🛡️ 【關鍵修改】：用這個函數一次把檔案和預覽畫面清得乾乾淨淨！
-            clearImageSelection();
-          }
+        if (error) {
+          console.error('發布失敗:', error);
+          alert(error.message); // 會觸發冷卻時間警告或 RLS 錯誤
+        } else {
+          // 成功後清空欄位
+          document.getElementById('positiveInput').value = '';
+          document.getElementById('negativeInput').value = '';
+          clearImageSelection(); // 使用我們之前做的清空預覽函數
+          alert("✨ 咒語發布成功！");
         }
+      }
+     
         // === 【升級版】撤回戰報 (墓碑機制) ===
         async function deleteNote(noteId) {
           // 更改提示文字，符合情境
