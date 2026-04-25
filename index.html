@@ -860,7 +860,7 @@
               <div class="card-icon icon-navy">💬</div>戰役留言板
             </div>
             
-            <div id="notesList" style="display: flex; flex-direction: column; gap: 10px;">
+            <div id="promptsList" style="display: flex; flex-direction: column; gap: 10px;">
               <div style="color: var(--text-muted); font-size: 13px;">通訊電話蟲正在連線讀取中...</div>
             </div>
           </div>
@@ -967,23 +967,31 @@
           }
         }
      
-        // 寫一個非同步函數來抓取剛剛建的 notes 資料
-        async function fetchNotes() {
-          // 1. 抓取資料庫內容（順便加上 .order 讓最新的留言排在最上面）
+        // 寫一個非同步函數來抓取剛剛建的 prompts 資料
+        // === 3. 讀取提示詞庫 ===
+        async function fetchPrompts() {
+          // 透過關聯查詢，一次抓取提示詞與它的愛心總數
           const { data, error } = await supabaseClient
-            .from('notes')
-            .select('*')
-            .order('id', { ascending: false });
+            .from('prompts')
+            .select(`
+              *,
+              favorites ( count )
+            `)
+            .order('created_at', { ascending: false });
         
-          // 2. 找到我們剛剛在 HTML 挖好的那個空位
-          const listContainer = document.getElementById('notesList');
-        
-          // 3. 處理錯誤情況
           if (error) {
-            console.error('抓取失敗:', error);
-            listContainer.innerHTML = '<div style="color: var(--crimson);">電話蟲連線中斷，讀取失敗！</div>';
-            return; // 發生錯誤就立刻停止執行
-          } 
+            console.error('讀取失敗:', error);
+            return;
+          }
+        
+          const listContainer = document.getElementById('promptsList');
+          listContainer.innerHTML = '';
+        
+          // 使用我們剛剛寫好的藍圖來畫卡片
+          data.forEach(prompt => {
+            listContainer.innerHTML += generatePromptCard(prompt);
+          });
+        }
         
           // 4. 清空原本「連線中...」的文字
           listContainer.innerHTML = '';
@@ -1042,11 +1050,11 @@
          {
            event: '*', // 依然監聽戰場上的「所有」變化
            schema: 'public',
-           table: 'notes'       
+           table: 'prompts'       
          },
          (payload) => {
            console.log('偵測到戰場變化！', payload.eventType, payload);
-           const listContainer = document.getElementById('notesList');
+           const listContainer = document.getElementById('promptsList');
      
            switch (payload.eventType) {
              
@@ -1267,6 +1275,69 @@
           alert("✨ 咒語發布成功！");
         }
       }
+
+      // === 1. 一鍵複製功能 ===
+      async function copyText(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        try {
+          await navigator.clipboard.writeText(text);
+          alert("✅ 咒語已成功複製！");
+        } catch (err) {
+          alert("複製失敗，請手動圈選複製。");
+        }
+      }
+      
+      // === 2. 產生「提示詞卡片」的 HTML 藍圖 ===
+      function generatePromptCard(prompt) {
+        // 檢查權限 (判斷要不要顯示撤回按鈕)
+        const isMyPost = currentUser && currentUser.id === prompt.user_id;
+        const deleteBtnHtml = isMyPost 
+          ? `<button onclick="deletePrompt('${prompt.id}')" style="float: right; background: none; border: none; color: #dc3545; cursor: pointer; font-size: 12px; font-weight: bold;">[撤回]</button>` 
+          : '';
+      
+        // 處理圖片
+        const imgHtml = prompt.image_url 
+          ? `<img src="${prompt.image_url}" style="width: 100%; max-height: 400px; object-fit: contain; background: #000; border-radius: 6px; margin-top: 10px;">` 
+          : '';
+      
+        // 處理愛心數量 (Supabase 關聯查詢的資料格式處理)
+        const favCount = prompt.favorites?.[0]?.count || prompt.favorites?.count || 0;
+      
+        // 組合卡片 HTML
+        return `
+          <div id="prompt-${prompt.id}" style="background: var(--smoke); padding: 16px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--navy); box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            
+            <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px; color: var(--gold-dark);">
+              ⚓ ${prompt.nickname || '無名大師'}
+              ${deleteBtnHtml}
+            </div>
+      
+            ${imgHtml}
+      
+            <div style="margin-top: 15px; background: #e8f5e9; padding: 12px; border-radius: 6px; position: relative;">
+              <div style="color: #28a745; font-weight: bold; font-size: 12px; margin-bottom: 6px;">✅ 正向提示詞 (Positive)</div>
+              <button onclick="copyText('pos-${prompt.id}')" style="position: absolute; right: 10px; top: 10px; border: 1px solid #c8e6c9; background: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">📋 複製</button>
+              <div id="pos-${prompt.id}" style="font-family: monospace; font-size: 14px; line-height: 1.5;">${prompt.positive_prompt}</div>
+            </div>
+      
+            ${prompt.negative_prompt ? `
+            <div style="margin-top: 10px; background: #ffebee; padding: 12px; border-radius: 6px; position: relative;">
+              <div style="color: #dc3545; font-weight: bold; font-size: 12px; margin-bottom: 6px;">❌ 反向提示詞 (Negative)</div>
+              <button onclick="copyText('neg-${prompt.id}')" style="position: absolute; right: 10px; top: 10px; border: 1px solid #ffcdd2; background: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">📋 複製</button>
+              <div id="neg-${prompt.id}" style="font-family: monospace; font-size: 14px; line-height: 1.5;">${prompt.negative_prompt}</div>
+            </div>
+            ` : ''}
+      
+            <div style="margin-top: 15px;">
+              <button onclick="alert('愛心功能即將連線！')" style="background: none; border: 1px solid #ccc; padding: 6px 12px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                🤍 <span>${favCount}</span>
+              </button>
+            </div>
+      
+          </div>
+        `;
+      }
+
      
         // === 【升級版】撤回戰報 (墓碑機制) ===
         async function deleteNote(noteId) {
@@ -1276,7 +1347,7 @@
         
           // 【關鍵修改】：不再使用 .delete()，而是使用 .update()
           const { error } = await supabaseClient
-            .from('notes')
+            .from('prompts')
             .update({ 
               content: '📜 [最高機密] 此戰報已被發布者銷毀。', 
               image_url: null // 同時把圖片清空
@@ -1291,7 +1362,7 @@
 
         // 執行函數
         checkUser();
-        fetchNotes();
+        fetchPrompts(); // 啟動讀取提示詞！
     </script>
 </body>
 </html>
